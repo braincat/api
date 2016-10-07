@@ -47,7 +47,7 @@ public class ApiServlet extends HttpServlet {
 
             long workspaceId = getWorkspaceId(request, response);
             if (workspaceId > 0) {
-                if (isAuthorised(workspaceId, "GET", "/workspace/" + workspaceId, null, request, response)) {
+                if (isAuthorised(workspaceId, "GET", "/workspace/" + workspaceId, null, true, request, response)) {
                     String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId);
 
                     response.setCharacterEncoding("UTF-8");
@@ -69,7 +69,7 @@ public class ApiServlet extends HttpServlet {
             if (workspaceId > 0) {
                 String workspaceAsJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
-                if (isAuthorised(workspaceId, "PUT", "/workspace/" + workspaceId, workspaceAsJson, request, response)) {
+                if (isAuthorised(workspaceId, "PUT", "/workspace/" + workspaceId, workspaceAsJson, false, request, response)) {
                     workspaceComponent.putWorkspace(workspaceId, workspaceAsJson);
 
                     send(new ApiSuccessMessage(), response);
@@ -117,12 +117,27 @@ public class ApiServlet extends HttpServlet {
         response.addHeader("Access-Control-Allow-Methods", "GET, PUT");
     }
 
-    private boolean isAuthorised(long workspaceId, String httpMethod, String path, String content, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    private boolean isAuthorised(long workspaceId, String httpMethod, String path, String content, boolean bypassHMacValidation, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String authorizationHeaderAsString = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorizationHeaderAsString == null || authorizationHeaderAsString.trim().length() == 0) {
             send(new ApiAuthorizationError("Authorization header must be provided"), response);
             return false;
+        }
+
+        String apiKey = workspaceComponent.getApiKey(workspaceId);
+
+        HmacAuthorizationHeader hmacAuthorizationHeader = HmacAuthorizationHeader.parse(authorizationHeaderAsString);
+        String apiKeyFromAuthorizationHeader = hmacAuthorizationHeader.getApiKey();
+
+        if (!apiKeyFromAuthorizationHeader.equals(apiKey)) {
+            send(new ApiAuthorizationError("Incorrect API key"), response);
+            return false;
+        } else {
+            if (bypassHMacValidation) {
+                // this makes the workspace accessible by only providing the API key
+                return true;
+            }
         }
 
         String contentType = request.getHeader(HttpHeaders.CONTENT_TYPE);
@@ -143,16 +158,7 @@ public class ApiServlet extends HttpServlet {
             return false;
         }
 
-        String apiKey = workspaceComponent.getApiKey(workspaceId);
-        HmacAuthorizationHeader hmacAuthorizationHeader = HmacAuthorizationHeader.parse(authorizationHeaderAsString);
-        String apiKeyFromAuthorizationHeader = hmacAuthorizationHeader.getApiKey();
-        String hmacInRequest = hmacAuthorizationHeader.getHmac();
         contentMd5InRequest = new String(Base64.getDecoder().decode(contentMd5Header));
-
-        if (!apiKeyFromAuthorizationHeader.equals(apiKey)) {
-            send(new ApiAuthorizationError("Incorrect API key"), response);
-            return false;
-        }
 
         String apiSecret = workspaceComponent.getApiSecret(workspaceId);
 
@@ -170,6 +176,7 @@ public class ApiServlet extends HttpServlet {
 
         HashBasedMessageAuthenticationCode code = new HashBasedMessageAuthenticationCode(apiSecret);
         try {
+            String hmacInRequest = hmacAuthorizationHeader.getHmac();
             HmacContent hmacContent = new HmacContent(httpMethod, path, contentMd5InRequest, contentType, nonce);
             String generatedHmac = code.generate(hmacContent.toString());
             if (!hmacInRequest.equals(generatedHmac)) {

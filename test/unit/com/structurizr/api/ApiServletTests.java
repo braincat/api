@@ -99,64 +99,10 @@ public class ApiServletTests {
     }
 
     @Test
-    public void test_doGet_ReturnsAnApiError_WhenNoNonceHeaderIsSpecified() throws Exception {
-        request.setPathInfo("/1");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "123");
-        apiServlet.doGet(request, response);
-        assertEquals(401, response.getStatus());
-        assertEquals("{\"message\":\"Request header missing: Nonce\"}", response.getContent());
-    }
-
-    @Test
-    public void test_doGet_ReturnsAnApiError_WhenNoContentMd5HeaderIsSpecified() throws Exception {
-        request.setPathInfo("/1");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "123");
-        request.addHeader(HttpHeaders.NONCE, "1234567890");
-        apiServlet.doGet(request, response);
-        assertEquals(401, response.getStatus());
-        assertEquals("{\"message\":\"Request header missing: Content-MD5\"}", response.getContent());
-    }
-
-    @Test
-    public void test_doGet_ReturnsAnApiError_WhenAnIncorrectApiKeyIsSpecifiedInTheAuthorizationHeader() throws Exception {
-        request.setPathInfo("/1");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "otherkey:f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8");
-        request.addHeader(HttpHeaders.NONCE, "1234567890");
-        request.addHeader(HttpHeaders.CONTENT_MD5, "ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=");
-        apiServlet.doGet(request, response);
-        assertEquals(401, response.getStatus());
-        assertEquals("{\"message\":\"Incorrect API key\"}", response.getContent());
-    }
-
-    @Test
-    public void test_doGet_ReturnsAnApiError_WhenTheContentMd5HeaderDoesNotMatchTheHashOfTheContent() throws Exception {
-        request.setPathInfo("/1");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "key:f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8");
-        request.addHeader(HttpHeaders.NONCE, "1234567890");
-        request.addHeader(HttpHeaders.CONTENT_MD5, "ZmM1ZTAzOGQzOGE1NzAzMjA4NTQ0MWU3ZmU3MDEwYjA=");
-        apiServlet.doGet(request, response);
-        assertEquals(401, response.getStatus());
-        assertEquals("{\"message\":\"MD5 hash doesn't match content\"}", response.getContent());
-    }
-
-    @Test
-    public void test_doGet_ReturnsAnApiError_WhenTheHmacPartOfTheAuthorizationHeaderIsIncorrectlySpecified() throws Exception {
-        request.setPathInfo("/1");
-        request.addHeader(HttpHeaders.AUTHORIZATION, "key:f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8");
-        request.addHeader(HttpHeaders.NONCE, "1234567890");
-        request.addHeader(HttpHeaders.CONTENT_MD5, "ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=");
-        apiServlet.doGet(request, response);
-        assertEquals(401, response.getStatus());
-        assertEquals("{\"message\":\"Authorization header doesn't match\"}", response.getContent());
-    }
-
-    @Test
-    public void test_doGet_ReturnsTheWorkspace_WhenTheAuthorizationHeaderIsCorrectlySpecified() throws Exception {
+    public void test_doGet_ReturnsTheWorkspace_WhenApiKeyIsCorrectlySpecified() throws Exception {
         workspaceComponent.putWorkspace(1, "json");
         request.setPathInfo("/1");
         request.addHeader(HttpHeaders.AUTHORIZATION, "key:NzdiN2M0MjAyNjA3MmJhYWZkYzUzZTgwZWJhNzRmYzE1YmIyYjE4NjBhZTdmODYxMDJhZThlODRkZjM1MTExYw==");
-        request.addHeader(HttpHeaders.NONCE, "1234567890");
-        request.addHeader(HttpHeaders.CONTENT_MD5, "ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=");
         apiServlet.doGet(request, response);
         assertEquals(200, response.getStatus());
         assertEquals("json", response.getContent());
@@ -167,7 +113,52 @@ public class ApiServletTests {
     }
 
     @Test
+    public void test_doPut_ReturnsAnApiError_WhenNoNonceHeaderIsSpecified() throws Exception {
+        request.setPathInfo("/1");
+        request.setContent("json");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "key:NWNkODEzYjVkZDE2ZGIzYmFlZDcxNjM5MjY3YjFhNGZiNDc5YjY1MzZiMzkwMjUyYzk3MGVhM2IyNmU4ZWI5OQ==");
+        apiServlet.doPut(request, response);
+        assertEquals(401, response.getStatus());
+        assertEquals("{\"message\":\"Request header missing: Nonce\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPut_ReturnsAnApiError_WhenNoContentMd5HeaderIsSpecified() throws Exception {
+        request.setPathInfo("/1");
+        request.setContent("json");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "key:NWNkODEzYjVkZDE2ZGIzYmFlZDcxNjM5MjY3YjFhNGZiNDc5YjY1MzZiMzkwMjUyYzk3MGVhM2IyNmU4ZWI5OQ==");
+        request.addHeader(HttpHeaders.NONCE, "1234567890");
+        apiServlet.doPut(request, response);
+        assertEquals(401, response.getStatus());
+        assertEquals("{\"message\":\"Request header missing: Content-MD5\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doGet_ReturnsAnApiError_WhenAnIncorrectApiKeyIsSpecifiedInTheAuthorizationHeader() throws Exception {
+        request.setPathInfo("/1");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "otherkey:NWNkODEzYjVkZDE2ZGIzYmFlZDcxNjM5MjY3YjFhNGZiNDc5YjY1MzZiMzkwMjUyYzk3MGVhM2IyNmU4ZWI5OQ==");
+        request.addHeader(HttpHeaders.NONCE, "1234567890");
+        request.addHeader(HttpHeaders.CONTENT_MD5, "ZDQxZDhjZDk4ZjAwYjIwNGU5ODAwOTk4ZWNmODQyN2U=");
+        apiServlet.doGet(request, response);
+        assertEquals(401, response.getStatus());
+        assertEquals("{\"message\":\"Incorrect API key\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPut_ReturnsAnApiError_WhenTheContentMd5HeaderDoesNotMatchTheHashOfTheContent() throws Exception {
+        request.setPathInfo("/1");
+        request.setContent("json");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "key:NWNkODEzYjVkZDE2ZGIzYmFlZDcxNjM5MjY3YjFhNGZiNDc5YjY1MzZiMzkwMjUyYzk3MGVhM2IyNmU4ZWI5OQ==");
+        request.addHeader(HttpHeaders.NONCE, "1234567890");
+        request.addHeader(HttpHeaders.CONTENT_MD5, "ZmM1ZTAzOGQzOGE1NzAzMjA4NTQ0MWU3ZmU3MDEwYjA=");
+        apiServlet.doPut(request, response);
+        assertEquals(401, response.getStatus());
+        assertEquals("{\"message\":\"MD5 hash doesn't match content\"}", response.getContent());
+    }
+
+    @Test
     public void test_doPut_ReturnsAnApiError_WhenNoAuthorizationHeaderIsSpecified() throws Exception {
+        request.setContent("json");
         request.setPathInfo("/1");
         apiServlet.doPut(request, response);
         assertEquals(401, response.getStatus());
@@ -177,7 +168,7 @@ public class ApiServletTests {
     @Test
     public void test_doPut_PutsTheWorkspace_WhenTheAuthorizationHeaderIsCorrectlySpecified() throws Exception {
         assertNull("json", workspaceComponent.getWorkspace(1));
-
+        request.setContent("json");
         request.setPathInfo("/1");
         request.addHeader(HttpHeaders.AUTHORIZATION, "key:NWNkODEzYjVkZDE2ZGIzYmFlZDcxNjM5MjY3YjFhNGZiNDc5YjY1MzZiMzkwMjUyYzk3MGVhM2IyNmU4ZWI5OQ==");
         request.addHeader(HttpHeaders.NONCE, "1234567890");
@@ -197,7 +188,11 @@ class MockHttpServletRequest implements HttpServletRequest {
 
     private String pathInfo;
     private Map<String,String> headers = new HashMap<>();
-    private StringReader stringReader = new StringReader("json");
+    private StringReader stringReader;
+
+    void setContent(String content) {
+        stringReader = new StringReader(content);
+    }
 
     @Override
     public String getAuthType() {
