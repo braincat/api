@@ -137,11 +137,13 @@ INFO  StructurizrClient - Putting workspace with ID 18561
 INFO  StructurizrClient - {"message":"OK"}
 ```
 
+You will also notice that the "Cloud" icon has been replaced with one that says, "On-premises API". 
+
 ![Structurizr](docs/empty-workspace-2.png)
 
 ### Preparing the local workspace
 
-With the remote workspace created, you next need to prepare the local Structurizr API. You can do this by opening a command prompt and changing to the directory that the Structurizr API is using to store data. This directory needs to contain a sub-directory for the workspace, which itself needs to contain a ```key.txt``` and ```secret,txt``` file. The contents of these files must correspond to the values shown on your Structrizr dashboard. For example.
+With the remote workspace created, you next need to prepare the local Structurizr API. You can do this by opening a command prompt and changing to the directory that the Structurizr API is using to store data. This directory needs to contain a sub-directory for the workspace, which itself needs to contain a ```key.txt``` and ```secret.txt``` file. The contents of these files must correspond to the values shown on your Structrizr dashboard. For example.
 
 ```
 mkdir 18561
@@ -181,6 +183,8 @@ SSL handshake errors are likely if using a self-signed certificate because the S
 ```
 -Djavax.net.ssl.trustStore=/Users/simon/Desktop/structurizr/keystore.jks
 ```
+
+Loading the workspace by clicking the link on your Structurizr dashboard will now load the workspace data from your on-premises API.
 
 ## TODO
 
