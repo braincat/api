@@ -11,10 +11,12 @@ version = '0.0.1'
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
+    compile 'com.structurizr:structurizr-annotations:0.9.0'
     testCompile 'junit:junit:4.12'
 }
 

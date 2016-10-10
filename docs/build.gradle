@@ -1,0 +1,34 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.5
+version = '1.0'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile 'com.structurizr:structurizr-core:0.9.0'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+sourceCompatibility = 1.8
+
+task run(type:JavaExec) {
+    main = "com.structurizr.onpremisesapi.Structurizr"
+    systemProperty "structurizr.api.key", System.getProperty("structurizr.api.key")
+    systemProperty "structurizr.api.secret", System.getProperty("structurizr.api.secret")
+    classpath(
+            sourceSets.main.runtimeClasspath,
+            files("${System.getProperty('java.home')}/../lib/tools.jar"),
+            parent.sourceSets.main.runtimeClasspath
+    )
+}
