@@ -36,16 +36,15 @@ public class Structurizr {
         softwareDeveloper.uses(structurizr, "Uses");
         structurizr.uses(structurizrApi, "Gets and puts workspace data using");
 
-        Container apiServer = structurizrApi.addContainer("API Application", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.", "Java EE web application");
+        Container apiApplication = structurizrApi.addContainer("API Application", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.", "Java EE web application");
         Container fileSystem = structurizrApi.addContainer("File System", "Stores workspace data.", "");
 
-        structurizr.uses(apiServer, "Gets and puts workspaces using");
-        apiServer.uses(fileSystem, "Stores information on");
+        structurizr.uses(apiApplication, "Gets and puts workspaces using");
+        apiApplication.uses(fileSystem, "Stores information on");
 
-        File sourceRoot = new File("src");
-
+        File sourceRoot = new File("../src");
         ComponentFinder componentFinder = new ComponentFinder(
-                apiServer,
+                apiApplication,
                 "com.structurizr.onpremisesapi",
                 new TypeBasedComponentFinderStrategy(
                         new NameSuffixTypeMatcher("Servlet", "", "Java Servlet")
@@ -58,7 +57,7 @@ public class Structurizr {
         componentFinder.findComponents();
 
         // link the architecture model with the code
-        for (Component component : apiServer.getComponents()) {
+        for (Component component : apiApplication.getComponents()) {
             String sourcePath = component.getSourcePath();
             if (sourcePath != null) {
                 component.setSourcePath(sourcePath.replace(
@@ -67,7 +66,7 @@ public class Structurizr {
             }
         }
 
-        structurizr.uses(apiServer.getComponentWithName("ApiServlet"), "Gets and puts workspaces using", "JSON/HTTPS");
+        structurizr.uses(apiApplication.getComponentWithName("ApiServlet"), "Gets and puts workspaces using", "JSON/HTTPS");
 
         SystemContextView contextView = views.createSystemContextView(structurizrApi, "Context", "The system context for the Structurizr API.");
         contextView.addAllElements();
@@ -75,16 +74,16 @@ public class Structurizr {
         ContainerView containerView = views.createContainerView(structurizrApi, "Containers", "The containers that make up the Structurizr API.");
         containerView.addAllElements();
 
-        ComponentView componentView = views.createComponentView(apiServer, "Components", "The components within the API Server.");
+        ComponentView componentView = views.createComponentView(apiApplication, "Components", "The components within the API Server.");
         componentView.addAllElements();
 
         structurizr.addTags(ON_THE_CLOUD);
         softwareDeveloper.addTags(BEHIND_FIREWALL);
         structurizrApi.addTags(BEHIND_FIREWALL);
-        apiServer.addTags(BEHIND_FIREWALL);
+        apiApplication.addTags(BEHIND_FIREWALL);
         fileSystem.addTags(BEHIND_FIREWALL);
 
-        apiServer.getComponents().stream().forEach(c -> c.addTags(BEHIND_FIREWALL));
+        apiApplication.getComponents().stream().forEach(c -> c.addTags(BEHIND_FIREWALL));
 
         styles.addElementStyle(Tags.ELEMENT).color("#ffffff").shape(Shape.RoundedBox);
         styles.addElementStyle(Tags.SOFTWARE_SYSTEM);
@@ -100,15 +99,13 @@ public class Structurizr {
         documentation.add(structurizrApi, Type.Context, Format.Markdown, new File(documentationRoot, "context.md"));
         documentation.add(structurizrApi, Type.Data, Format.Markdown, new File(documentationRoot, "data.md"));
         documentation.add(structurizrApi, Type.Containers, Format.Markdown, new File(documentationRoot, "containers.md"));
-        documentation.add(apiServer, Format.Markdown, new File(documentationRoot, "components.md"));
+        documentation.add(apiApplication, Format.Markdown, new File(documentationRoot, "components.md"));
         documentation.add(structurizrApi, Type.DevelopmentEnvironment, Format.Markdown, new File(documentationRoot, "development-environment.md"));
         documentation.add(structurizrApi, Type.Deployment, Format.Markdown, new File(documentationRoot, "deployment.md"));
         documentation.add(structurizrApi, Type.Usage, Format.Markdown, new File(documentationRoot, "usage.md"));
 
         StructurizrClient client = new StructurizrClient(System.getProperty("structurizr.api.key"), System.getProperty("structurizr.api.secret"));
         client.mergeWorkspace(18571, workspace);
-//        StructurizrClient client = new StructurizrClient("https://localhost:9443", "6b274e26-83cf-4a96-a975-9017292f6584", "f676268e-9ef4-4f17-aada-a3ca64a4ba87");
-//        client.mergeWorkspace(47, workspace);
     }
 
 }
