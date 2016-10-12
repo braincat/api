@@ -112,8 +112,14 @@ public class Structurizr {
         documentation.add(structurizrApi, Type.Usage, Format.Markdown, new File(documentationRoot, "usage.md"));
 
         // upload to Structurizr
-        StructurizrClient client = new StructurizrClient(System.getenv("STRUCTURIZR_API_KEY"), System.getenv("STRUCTURIZR_API_SECRET"));
-        client.mergeWorkspace(18571, workspace);
+        String apiKey = System.getenv("STRUCTURIZR_API_KEY");
+        String apiSecret = System.getenv("STRUCTURIZR_API_SECRET");
+        if (apiKey != null && apiSecret != null) {
+            StructurizrClient client = new StructurizrClient(apiKey, apiSecret);
+            client.mergeWorkspace(18571, workspace);
+        } else {
+            System.out.println("API key/secret not specified ... skipping upload of software architecture model to Structurizr.");
+        }
     }
 
 }
