@@ -24,8 +24,8 @@ sourceCompatibility = 1.8
 
 task run(type:JavaExec) {
     main = "com.structurizr.onpremisesapi.Structurizr"
-    systemProperty "structurizr.api.key", System.getProperty("structurizr.api.key")
-    systemProperty "structurizr.api.secret", System.getProperty("structurizr.api.secret")
+    environment "STRUCTURIZR_API_KEY", System.getenv("STRUCTURIZR_API_KEY")
+    environment "STRUCTURIZR_API_SECRET", System.getenv("STRUCTURIZR_API_SECRET")
     classpath(
             sourceSets.main.runtimeClasspath,
             files("${System.getProperty('java.home')}/../lib/tools.jar"),

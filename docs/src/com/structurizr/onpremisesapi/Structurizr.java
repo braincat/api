@@ -45,12 +45,15 @@ public class Structurizr {
 
         // components
         File sourceRoot = new File("../src");
+        TypeBasedComponentFinderStrategy typeBasedComponentFinderStrategy = new TypeBasedComponentFinderStrategy(
+                new NameSuffixTypeMatcher("Servlet", "", "Java Servlet")
+        );
+        // uncomment the following line when Structurizr for Java 0.9.1 is released
+        // typeBasedComponentFinderStrategy.addSupportingTypesStrategy(new ReferencedTypesSupportingTypesStrategy());
         ComponentFinder componentFinder = new ComponentFinder(
                 apiApplication,
                 "com.structurizr.onpremisesapi",
-                new TypeBasedComponentFinderStrategy(
-                        new NameSuffixTypeMatcher("Servlet", "", "Java Servlet")
-                ),
+                typeBasedComponentFinderStrategy,
                 new StructurizrAnnotationsComponentFinderStrategy(
                         new FirstImplementationOfInterfaceSupportingTypesStrategy(),
                         new ReferencedTypesSupportingTypesStrategy()
@@ -109,7 +112,7 @@ public class Structurizr {
         documentation.add(structurizrApi, Type.Usage, Format.Markdown, new File(documentationRoot, "usage.md"));
 
         // upload to Structurizr
-        StructurizrClient client = new StructurizrClient(System.getProperty("structurizr.api.key"), System.getProperty("structurizr.api.secret"));
+        StructurizrClient client = new StructurizrClient(System.getenv("STRUCTURIZR_API_KEY"), System.getenv("STRUCTURIZR_API_SECRET"));
         client.mergeWorkspace(18571, workspace);
     }
 
