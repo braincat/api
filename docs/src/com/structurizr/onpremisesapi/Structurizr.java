@@ -29,19 +29,21 @@ public class Structurizr {
         Styles styles = workspace.getViews().getConfiguration().getStyles();
         Documentation documentation = workspace.getDocumentation();
 
+        // software systems and people
         Person softwareDeveloper = model.addPerson(Location.Internal, "Software Developer", "A software developer.");
         SoftwareSystem structurizr = model.addSoftwareSystem(Location.External, "Structurizr", "Visualise, document and explore your software architecture.");
         SoftwareSystem structurizrApi = model.addSoftwareSystem(Location.Internal, "Structurizr API", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.");
-
         softwareDeveloper.uses(structurizr, "Uses");
         structurizr.uses(structurizrApi, "Gets and puts workspace data using");
 
+        // containers
         Container apiApplication = structurizrApi.addContainer("API Application", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.", "Java EE web application");
         Container fileSystem = structurizrApi.addContainer("File System", "Stores workspace data.", "");
 
         structurizr.uses(apiApplication, "Gets and puts workspaces using");
         apiApplication.uses(fileSystem, "Stores information on");
 
+        // components
         File sourceRoot = new File("../src");
         ComponentFinder componentFinder = new ComponentFinder(
                 apiApplication,
@@ -56,6 +58,8 @@ public class Structurizr {
                 new SourceCodeComponentFinderStrategy(sourceRoot, 150));
         componentFinder.findComponents();
 
+        structurizr.uses(apiApplication.getComponentWithName("ApiServlet"), "Gets and puts workspaces using", "JSON/HTTPS");
+
         // link the architecture model with the code
         for (Component component : apiApplication.getComponents()) {
             String sourcePath = component.getSourcePath();
@@ -66,8 +70,7 @@ public class Structurizr {
             }
         }
 
-        structurizr.uses(apiApplication.getComponentWithName("ApiServlet"), "Gets and puts workspaces using", "JSON/HTTPS");
-
+        // views
         SystemContextView contextView = views.createSystemContextView(structurizrApi, "Context", "The system context for the Structurizr API.");
         contextView.addAllElements();
 
@@ -77,23 +80,24 @@ public class Structurizr {
         ComponentView componentView = views.createComponentView(apiApplication, "Components", "The components within the API Server.");
         componentView.addAllElements();
 
+        // tags
         structurizr.addTags(ON_THE_CLOUD);
         softwareDeveloper.addTags(BEHIND_FIREWALL);
         structurizrApi.addTags(BEHIND_FIREWALL);
         apiApplication.addTags(BEHIND_FIREWALL);
         fileSystem.addTags(BEHIND_FIREWALL);
-
         apiApplication.getComponents().stream().forEach(c -> c.addTags(BEHIND_FIREWALL));
 
+        // styles
         styles.addElementStyle(Tags.ELEMENT).color("#ffffff").shape(Shape.RoundedBox);
         styles.addElementStyle(Tags.SOFTWARE_SYSTEM);
         styles.addElementStyle(Tags.PERSON).shape(Shape.Person);
         styles.addElementStyle(Tags.CONTAINER);
         styles.addElementStyle(Tags.COMPONENT);
-
         styles.addElementStyle(ON_THE_CLOUD).background("#85bbf0");
         styles.addElementStyle(BEHIND_FIREWALL).background("#1168bd");
 
+        // documentation
         File documentationRoot = new File(".");
         documentation.addImages(documentationRoot);
         documentation.add(structurizrApi, Type.Context, Format.Markdown, new File(documentationRoot, "context.md"));
@@ -104,6 +108,7 @@ public class Structurizr {
         documentation.add(structurizrApi, Type.Deployment, Format.Markdown, new File(documentationRoot, "deployment.md"));
         documentation.add(structurizrApi, Type.Usage, Format.Markdown, new File(documentationRoot, "usage.md"));
 
+        // upload to Structurizr
         StructurizrClient client = new StructurizrClient(System.getProperty("structurizr.api.key"), System.getProperty("structurizr.api.secret"));
         client.mergeWorkspace(18571, workspace);
     }
