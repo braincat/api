@@ -65,14 +65,20 @@ INFO  StructurizrClient - Putting workspace with ID 18561
 INFO  StructurizrClient - {"message":"OK"}
 ```
 
-SSL handshake errors are likely if using a self-signed certificate because the Structurizr client program runtime won't trust the certificate served by the Structurizr API server. If using the Java client, you can use ```javax.net.ssl.trustStore``` JVM option to point to your keystore. For example.
+Loading the workspace by clicking the link on your Structurizr dashboard will now load the workspace data from your on-premises API.
+
+### SSL handshake errors
+
+SSL handshake errors are likely if using a self-signed certificate, because the Structurizr client program runtime won't trust the certificate served by the Structurizr API server.
+
+If using the Java client, you can use ```javax.net.ssl.trustStore``` JVM option to point to your keystore. For example.
 
 ```
 -Djavax.net.ssl.trustStore=/Users/simon/Desktop/structurizr/keystore.jks
 ```
 
-Loading the workspace by clicking the link on your Structurizr dashboard will now load the workspace data from your on-premises API.
+If using the .NET client, you'll need to export the certificate from the keystore and install it into the "Trusted Root Certification Authories" certificate store. Double-clicking the certificate file in the File Explorer should open the certificate details, from which you can install the certificate.
 
-## TODO
-
-- Trusting a self-signed certificate from .NET.
+```
+keytool -export -keystore keystore.jks -alias tomcat -file tomcat.cer
+```
