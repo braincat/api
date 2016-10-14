@@ -33,6 +33,7 @@ public class Structurizr {
         Person softwareDeveloper = model.addPerson(Location.Internal, "Software Developer", "A software developer.");
         SoftwareSystem structurizr = model.addSoftwareSystem(Location.External, "Structurizr", "Visualise, document and explore your software architecture.");
         SoftwareSystem structurizrApi = model.addSoftwareSystem(Location.Internal, "Structurizr API", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.");
+
         softwareDeveloper.uses(structurizr, "Uses");
         structurizr.uses(structurizrApi, "Gets and puts workspace data using");
 
