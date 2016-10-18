@@ -49,8 +49,8 @@ public class Structurizr {
         TypeBasedComponentFinderStrategy typeBasedComponentFinderStrategy = new TypeBasedComponentFinderStrategy(
                 new NameSuffixTypeMatcher("Servlet", "", "Java Servlet")
         );
-        // uncomment the following line when Structurizr for Java 0.9.1 is released
-        // typeBasedComponentFinderStrategy.addSupportingTypesStrategy(new ReferencedTypesSupportingTypesStrategy());
+        typeBasedComponentFinderStrategy.addSupportingTypesStrategy(new ReferencedTypesSupportingTypesStrategy());
+
         ComponentFinder componentFinder = new ComponentFinder(
                 apiApplication,
                 "com.structurizr.onpremisesapi",
@@ -66,11 +66,13 @@ public class Structurizr {
 
         // link the architecture model with the code
         for (Component component : apiApplication.getComponents()) {
-            String sourcePath = component.getSourcePath();
-            if (sourcePath != null) {
-                component.setSourcePath(sourcePath.replace(
-                        sourceRoot.getCanonicalPath(),
-                        "https://github.com/structurizr/api/tree/master/src"));
+            for (CodeElement codeElement : component.getCode()) {
+                String source = codeElement.getSource();
+                if (source != null) {
+                    codeElement.setSource(source.replace(
+                            sourceRoot.getCanonicalPath(),
+                            "https://github.com/structurizr/api/tree/master/src"));
+                }
             }
         }
 

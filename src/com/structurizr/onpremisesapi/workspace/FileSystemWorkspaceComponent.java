@@ -10,7 +10,7 @@ import java.nio.file.Files;
  * A simple workspace component implementation that uses the local file system.
  */
 @UsesContainer(name = "File System", description = "Stores information on")
-public class FileSystemWorkspaceComponent implements WorkspaceComponent {
+class FileSystemWorkspaceComponent implements WorkspaceComponent {
 
     private File dataDirectory;
 
