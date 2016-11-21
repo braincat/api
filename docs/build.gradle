@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.structurizr:structurizr-core:0.9.1'
+    compile 'com.structurizr:structurizr-core:1.0.0-RC2'
 }
 
 sourceSets {

@@ -67,11 +67,11 @@ public class Structurizr {
         // link the architecture model with the code
         for (Component component : apiApplication.getComponents()) {
             for (CodeElement codeElement : component.getCode()) {
-                String source = codeElement.getSource();
-                if (source != null) {
-                    codeElement.setSource(source.replace(
-                            sourceRoot.getCanonicalPath(),
-                            "https://github.com/structurizr/api/tree/master/src"));
+                String sourcePath = codeElement.getUrl();
+                if (sourcePath != null) {
+                    codeElement.setUrl(sourcePath.replace(
+                            sourceRoot.toURI().toString(),
+                            "https://github.com/structurizr/api/tree/master"));
                 }
             }
         }
@@ -119,7 +119,7 @@ public class Structurizr {
         String apiSecret = System.getenv("STRUCTURIZR_API_SECRET");
         if (apiKey != null && apiSecret != null) {
             StructurizrClient client = new StructurizrClient(apiKey, apiSecret);
-            client.mergeWorkspace(18571, workspace);
+            client.putWorkspace(18571, workspace);
         } else {
             System.out.println("API key/secret not specified ... skipping upload of software architecture model to Structurizr.");
         }
