@@ -39,7 +39,7 @@ public class Structurizr {
 
         // containers
         Container apiApplication = structurizrApi.addContainer("API Application", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.", "Java EE web application");
-        Container fileSystem = structurizrApi.addContainer("File System", "Stores workspace data.", "");
+        Container fileSystem = structurizrApi.addContainer("File System", "Stores workspace data.", "Local or network file system");
 
         structurizr.uses(apiApplication, "Gets and puts workspaces using");
         apiApplication.uses(fileSystem, "Stores information on");

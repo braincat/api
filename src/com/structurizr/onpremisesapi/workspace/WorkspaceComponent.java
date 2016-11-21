@@ -7,7 +7,7 @@ import java.io.File;
 /**
  * Responsible for managing workspace information (workspace definitions plus API keys and secrets).
  */
-@Component
+@Component(technology = "Java")
 public interface WorkspaceComponent {
 
     public String getWorkspace(long workspaceId) throws WorkspaceComponentException;
