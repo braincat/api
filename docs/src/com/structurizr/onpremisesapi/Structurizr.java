@@ -70,8 +70,8 @@ public class Structurizr {
                 String sourcePath = codeElement.getUrl();
                 if (sourcePath != null) {
                     codeElement.setUrl(sourcePath.replace(
-                            sourceRoot.toURI().toString(),
-                            "https://github.com/structurizr/api/tree/master"));
+                            sourceRoot.getCanonicalFile().toURI().toString(),
+                            "https://github.com/structurizr/api/tree/master/src/"));
                 }
             }
         }
