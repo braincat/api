@@ -25,10 +25,10 @@ public class FileSystemWorkspaceComponentTests {
     }
 
     @Test
-    public void test_getWorkspace_ThrowsAnException_WhenTheWorkspaceDoesNotExist() {
+    public void test_getWorkspace_ReturnsAnEmptyJsonString_WhenTheWorkspaceDoesNotExist() {
         try {
-            workspaceComponent.getWorkspace(1);
-            fail();
+            String json = workspaceComponent.getWorkspace(1);
+            assertEquals("{}", json);
         } catch (WorkspaceComponentException e) {
             assertEquals("Could not get workspace 1", e.getMessage());
         }
@@ -45,12 +45,12 @@ public class FileSystemWorkspaceComponentTests {
     }
 
     @Test
-    public void test_getApiKey_ThrowsAnException_WhenTheApiKeyDoesNotExist() {
+    public void test_getApiKey_ThrowsAnException_WhenTheApiKeyDoesNotExist() throws Exception {
         try {
             workspaceComponent.getApiKey(1);
             fail();
         } catch (WorkspaceComponentException e) {
-            assertEquals("Could not find API key for workspace 1", e.getMessage());
+            assertEquals("Could not find API key at " + dataDirectory.getCanonicalPath() + "/1/key.txt", e.getMessage());
         }
     }
 
@@ -65,12 +65,12 @@ public class FileSystemWorkspaceComponentTests {
     }
 
     @Test
-    public void test_getApiSecret_ThrowsAnException_WhenTheApiSecretDoesNotExist() {
+    public void test_getApiSecret_ThrowsAnException_WhenTheApiSecretDoesNotExist() throws Exception {
         try {
             workspaceComponent.getApiSecret(1);
             fail();
         } catch (WorkspaceComponentException e) {
-            assertEquals("Could not find API secret for workspace 1", e.getMessage());
+            assertEquals("Could not find API secret at " + dataDirectory.getCanonicalPath() + "/1/secret.txt", e.getMessage());
         }
     }
 

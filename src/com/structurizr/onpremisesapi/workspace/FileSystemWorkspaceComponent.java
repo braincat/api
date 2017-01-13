@@ -23,8 +23,11 @@ class FileSystemWorkspaceComponent implements WorkspaceComponent {
         try {
             File path = getPathToWorkspace(workspaceId);
             File file = new File(path, "workspace.json");
-
-            return new String(Files.readAllBytes(file.toPath()), "UTF-8");
+            if (file.exists()) {
+                return new String(Files.readAllBytes(file.toPath()), "UTF-8");
+            } else {
+                return "{}";
+            }
         } catch (IOException ioe) {
             throw new WorkspaceComponentException("Could not get workspace " + workspaceId, ioe);
         }
@@ -50,7 +53,7 @@ class FileSystemWorkspaceComponent implements WorkspaceComponent {
             if (file.exists()) {
                 return new String(Files.readAllBytes(file.toPath()), "UTF-8").trim();
             } else {
-                throw new WorkspaceComponentException("Could not find API key for workspace " + workspaceId);
+                throw new WorkspaceComponentException("Could not find API key at " + file.getCanonicalPath());
             }
         } catch (IOException ioe) {
             throw new WorkspaceComponentException("Error getting API key for workspace " + workspaceId, ioe);
@@ -65,7 +68,7 @@ class FileSystemWorkspaceComponent implements WorkspaceComponent {
             if (file.exists()) {
                 return new String(Files.readAllBytes(file.toPath()), "UTF-8").trim();
             } else {
-                throw new WorkspaceComponentException("Could not find API secret for workspace " + workspaceId);
+                throw new WorkspaceComponentException("Could not find API secret at " + file.getCanonicalPath());
             }
         } catch (IOException ioe) {
             throw new WorkspaceComponentException("Error getting API secret for workspace " + workspaceId, ioe);
