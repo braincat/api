@@ -3,13 +3,20 @@ package com.structurizr.onpremisesapi.web;
 import com.structurizr.annotation.UsedBySoftwareSystem;
 import com.structurizr.annotation.UsesComponent;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
+import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.RenderedImage;
+import java.awt.image.renderable.RenderableImage;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Base64;
 import java.util.stream.Collectors;
 
@@ -50,16 +57,58 @@ public class ApiServlet extends HttpServlet {
 
             long workspaceId = getWorkspaceId(request, response);
             if (workspaceId > 0) {
-                if (isAuthorised(workspaceId, "GET", "/workspace/" + workspaceId, null, true, request, response)) {
-                    String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId);
+                String resource = getResource(request);
+                if (resource == null) {
+                    if (isAuthorised(workspaceId, "GET", "/workspace/" + workspaceId, null, true, request, response)) {
+                        String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId);
 
-                    response.setCharacterEncoding("UTF-8");
-                    response.setContentType("application/json; charset=utf-8");
-                    send(new ApiDataResponse(workspaceAsJson), response);
+                        response.setCharacterEncoding("UTF-8");
+                        response.setContentType("application/json; charset=utf-8");
+                        send(new ApiDataResponse(workspaceAsJson), response);
+                    }
+                } else {
+                    if (isImage(resource)) {
+                        try {
+                            RenderedImage image = workspaceComponent.getImage(workspaceId, resource);
+                            if (image != null) {
+                                String fileExtension = resource.substring(resource.lastIndexOf(".")+1);
+                                response.setContentType(getMimeType(fileExtension));
+                                OutputStream out = response.getOutputStream();
+                                ImageIO.write(image, fileExtension, out);
+                                out.close();
+                                response.setStatus(HttpServletResponse.SC_OK);
+                            } else {
+                                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                            }
+                        } catch (WorkspaceComponentException e) {
+                            e.printStackTrace();
+                            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        }
+                    } else {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    }
                 }
             }
         } catch (Exception e) {
             send(new ApiError(e), response);
+        }
+    }
+
+    private boolean isImage(String name) {
+        return  name != null && (
+                name.toLowerCase().endsWith(".jpg") ||
+                name.toLowerCase().endsWith(".jpeg") ||
+                name.toLowerCase().endsWith(".png") ||
+                name.toLowerCase().endsWith(".gif"));
+    }
+
+    private String getMimeType(String fileExtension) {
+        switch (fileExtension) {
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            default:
+                return "image/" + fileExtension;
         }
     }
 
@@ -86,7 +135,13 @@ public class ApiServlet extends HttpServlet {
     private long getWorkspaceId(HttpServletRequest request, HttpServletResponse response) {
         long workspaceId;
         try {
-            workspaceId = Long.parseLong(request.getPathInfo().substring(1)); // remove the leading / character
+            String path = request.getPathInfo().substring(1); // remove the leading / character
+            if (path.contains("/")) {
+                String[] parts = path.split("/");
+                workspaceId = Long.parseLong(parts[0]);
+            } else {
+                workspaceId = Long.parseLong(path);
+            }
 
             if (workspaceId < 1) {
                 send(new ApiError("Workspace ID must be greater than 1"), response);
@@ -98,6 +153,21 @@ public class ApiServlet extends HttpServlet {
         }
 
         return workspaceId;
+    }
+
+    private String getResource(HttpServletRequest request) {
+        String path = request.getPathInfo().substring(1); // remove the leading / character
+        if (path.contains("/")) {
+            String[] parts = path.split("/");
+            if (parts.length >= 2) {
+                String resource = parts[1];
+                if (resource != null && resource.trim().length() > 0) {
+                    return resource;
+                }
+            }
+        }
+
+        return null;
     }
 
     private void send(ApiResponse apiResponse, HttpServletResponse response) {

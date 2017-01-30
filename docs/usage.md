@@ -82,3 +82,11 @@ If using the .NET client, you'll need to export the certificate from the keystor
 ```
 keytool -export -keystore keystore.jks -alias tomcat -file tomcat.cer
 ```
+
+### Serving static images
+
+Any image files stored in the workspace sub-directory can be accessed using a URL like the following:
+
+```https://localhost:9999/workspace/18561/some-image.png```
+
+This allows you to store images on the on-premises API server, and reference them in the supplementary Markdown or AsciiDoc documentation.

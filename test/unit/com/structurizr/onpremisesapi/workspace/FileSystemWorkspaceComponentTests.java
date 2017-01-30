@@ -1,15 +1,15 @@
 package com.structurizr.onpremisesapi.workspace;
 
-import com.structurizr.onpremisesapi.workspace.FileSystemWorkspaceComponent;
-import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
 import org.junit.After;
 import org.junit.Test;
 
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class FileSystemWorkspaceComponentTests {
 
@@ -72,6 +72,32 @@ public class FileSystemWorkspaceComponentTests {
         } catch (WorkspaceComponentException e) {
             assertEquals("Could not find API secret at " + dataDirectory.getCanonicalPath() + "/1/secret.txt", e.getMessage());
         }
+    }
+
+    @Test
+    public void test_getImage_ReturnsNull_WhenTheWorkspaceDoesNotExist() throws Exception {
+        assertNull(workspaceComponent.getImage(1234, "image.png"));
+    }
+
+    @Test
+    public void test_getImage_ReturnsNull_WhenTheImageDoesNotExist() throws Exception {
+        File dir = new File(dataDirectory, "1");
+        dir.mkdirs();
+
+        assertNull(workspaceComponent.getImage(1, "image.png"));
+    }
+
+    @Test
+    public void test_getImage_ReturnsAnImage_WhenTheImageDoesExist() throws Exception {
+        File dir = new File(dataDirectory, "1");
+        dir.mkdirs();
+
+        File source = new File("test/unit/com/structurizr/onpremisesapi/image.png");
+        File destination = new File(dir, "image.png");
+        Files.copy(source.toPath(), destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+        RenderedImage image = workspaceComponent.getImage(1, "image.png");
+        assertNotNull(image);
     }
 
     @After

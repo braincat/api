@@ -2,6 +2,7 @@ package com.structurizr.onpremisesapi.workspace;
 
 import com.structurizr.annotation.Component;
 
+import java.awt.image.RenderedImage;
 import java.io.File;
 
 /**
@@ -17,6 +18,8 @@ public interface WorkspaceComponent {
     public String getApiKey(long workspaceId) throws WorkspaceComponentException;
 
     public String getApiSecret(long workspaceId) throws WorkspaceComponentException;
+
+    public RenderedImage getImage(long workspaceId, String name) throws WorkspaceComponentException;
 
     /**
      * A simple factory method to create a component instance.

@@ -17,6 +17,8 @@ An ```OPTIONS``` request is also supported for preflighting, which returns the f
 - ```Access-Control-Allow-Headers: accept, origin, Content-Type, Content-MD5, Authorization, Nonce```
 - ```Access-Control-Allow-Methods: GET, PUT```
 
+The APIServlet will also serve images (".png", ".gif", ".jpg" and ".jpeg") that are stored in the workspace data directory.
+
 ### WorkspaceComponent
 
 This component manages the data associated with a workspace. The included implementation simply stores data on the file system - see the [Data](#Data) section for more details.

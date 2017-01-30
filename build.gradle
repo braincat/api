@@ -7,7 +7,7 @@ apply plugin: 'war'
 
 description = 'structurizr-api'
 group = 'com.structurizr'
-version = '0.0.1'
+version = '0.2'
 
 repositories {
     mavenCentral()

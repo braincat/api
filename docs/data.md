@@ -5,3 +5,5 @@ This data directory contains one sub-directory per workspace, each of which is n
 - ```workspace.json``` - the workspace definition as JSON
 - ```key.txt``` - the Structurizr API key for the workspace
 - ```secret.txt``` - the Structurizr API secret for the workspace
+
+Additionally, image files (".png", ".gif", ".jpg" and ".jpeg") can be placed into a workspace sub-directory and served up as-is by the API server.

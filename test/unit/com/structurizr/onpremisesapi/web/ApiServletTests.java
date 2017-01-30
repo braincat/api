@@ -5,16 +5,21 @@ import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.imageio.ImageIO;
 import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.Principal;
 import java.util.*;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -82,6 +87,14 @@ public class ApiServletTests {
     @Test
     public void test_doGet_ReturnsAnApiError_WhenNoAuthorizationHeaderIsSpecified() throws Exception {
         request.setPathInfo("/1");
+        apiServlet.doGet(request, response);
+        assertEquals(401, response.getStatus());
+        assertEquals("{\"message\":\"Authorization header must be provided\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doGet_ReturnsAnApiError_WhenNoAuthorizationHeaderIsSpecifiedAndTheUrlHasATrailingSlash() throws Exception {
+        request.setPathInfo("/1/");
         apiServlet.doGet(request, response);
         assertEquals(401, response.getStatus());
         assertEquals("{\"message\":\"Authorization header must be provided\"}", response.getContent());
@@ -180,6 +193,63 @@ public class ApiServletTests {
         assertEquals("*", response.getHeader("Access-Control-Allow-Origin"));
         assertEquals("accept, origin, Content-Type, Content-MD5, Authorization, Nonce", response.getHeader("Access-Control-Allow-Headers"));
         assertEquals("GET, PUT", response.getHeader("Access-Control-Allow-Methods"));
+    }
+
+    @Test
+    public void test_doGet_ReturnsANotFoundError_WhenAResourceIsRequestedButItDoesNotExist() throws Exception {
+        apiServlet.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public RenderedImage getImage(long workspaceId, String name) throws WorkspaceComponentException {
+                return null;
+            }
+        });
+
+        request.setPathInfo("/1/image.png");
+        apiServlet.doGet(request, response);
+        assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    public void test_doGet_ReturnsANotFoundError_WhenANonImageResourceIsRequested() throws Exception {
+        request.setPathInfo("/1/image.txt");
+        apiServlet.doGet(request, response);
+        assertEquals(404, response.getStatus());
+    }
+
+    @Test
+    public void test_doGet_ReturnsAPngImage_WhenAnImageResourceIsRequestedAndItDoesExist() throws Exception {
+        request.setPathInfo("/1/image.png");
+        apiServlet.doGet(request, response);
+        assertEquals(200, response.getStatus());
+        assertEquals(6631, response.getContentAsBytes().length);
+        assertEquals("image/png", response.getContentType());
+    }
+
+    @Test
+    public void test_doGet_ReturnsAJpegImage_WhenAnImageResourceIsRequestedAndItDoesExist() throws Exception {
+        request.setPathInfo("/1/image.jpeg");
+        apiServlet.doGet(request, response);
+        assertEquals(200, response.getStatus());
+        assertEquals(7772, response.getContentAsBytes().length);
+        assertEquals("image/jpeg", response.getContentType());
+    }
+
+    @Test
+    public void test_doGet_ReturnsAJpgImage_WhenAnImageResourceIsRequestedAndItDoesExist() throws Exception {
+        request.setPathInfo("/1/image.jpg");
+        apiServlet.doGet(request, response);
+        assertEquals(200, response.getStatus());
+        assertEquals(7772, response.getContentAsBytes().length);
+        assertEquals("image/jpeg", response.getContentType());
+    }
+
+    @Test
+    public void test_doGet_ReturnsAGifImage_WhenAnImageResourceIsRequestedAndItDoesExist() throws Exception {
+        request.setPathInfo("/1/image.gif");
+        apiServlet.doGet(request, response);
+        assertEquals(200, response.getStatus());
+        assertEquals(4593, response.getContentAsBytes().length);
+        assertEquals("image/gif", response.getContentType());
     }
 
 }
@@ -479,9 +549,15 @@ class MockHttpServletResponse implements HttpServletResponse {
     private int status;
     private StringWriter stringWriter = new StringWriter();
     private PrintWriter printWriter = new PrintWriter(stringWriter);
+    private List<Integer> bytes = new ArrayList<>();
+    private String contentType;
 
     String getContent() {
         return stringWriter.toString();
+    }
+
+    Integer[] getContentAsBytes() {
+        return bytes.toArray(new Integer[0]);
     }
 
     @Override
@@ -520,8 +596,8 @@ class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public void sendError(int i) throws IOException {
-
+    public void sendError(int status) throws IOException {
+        this.status = status;
     }
 
     @Override
@@ -584,12 +660,17 @@ class MockHttpServletResponse implements HttpServletResponse {
 
     @Override
     public String getContentType() {
-        return null;
+        return this.contentType;
     }
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
-        return null;
+        return new ServletOutputStream() {
+            @Override
+            public void write(int b) throws IOException {
+                bytes.add(b);
+            }
+        };
     }
 
     @Override
@@ -608,8 +689,8 @@ class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public void setContentType(String s) {
-
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     @Override
@@ -805,6 +886,15 @@ class MockWorkspaceComponent implements WorkspaceComponent {
     @Override
     public String getApiSecret(long workspaceId) throws WorkspaceComponentException {
         return "secret";
+    }
+
+    @Override
+    public RenderedImage getImage(long workspaceId, String name) throws WorkspaceComponentException {
+        try {
+            return ImageIO.read(new File("test/unit/com/structurizr/onpremisesapi", name));
+        } catch (IOException e) {
+            throw new WorkspaceComponentException(e.getMessage(), e);
+        }
     }
 
 }

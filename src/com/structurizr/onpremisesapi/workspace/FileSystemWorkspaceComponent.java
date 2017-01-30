@@ -2,9 +2,13 @@ package com.structurizr.onpremisesapi.workspace;
 
 import com.structurizr.annotation.UsesContainer;
 
+import javax.imageio.ImageIO;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 /**
  * A simple workspace component implementation that uses the local file system.
@@ -72,6 +76,22 @@ class FileSystemWorkspaceComponent implements WorkspaceComponent {
             }
         } catch (IOException ioe) {
             throw new WorkspaceComponentException("Error getting API secret for workspace " + workspaceId, ioe);
+        }
+    }
+
+    @Override
+    public RenderedImage getImage(long workspaceId, String name) throws WorkspaceComponentException {
+        try {
+            File path = getPathToWorkspace(workspaceId);
+            File[] files = path.listFiles(file -> file.getName().equals(name));
+
+            if (files != null && files.length == 1) {
+                return ImageIO.read(files[0]);
+            } else {
+                return null;
+            }
+        } catch (IOException ioe) {
+            throw new WorkspaceComponentException("Error getting resource named " + name + " from workspace " + workspaceId, ioe);
         }
     }
 
