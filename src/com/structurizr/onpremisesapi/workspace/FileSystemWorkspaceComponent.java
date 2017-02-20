@@ -23,6 +23,26 @@ class FileSystemWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
+    public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException {
+        try {
+            File path = getPathToWorkspace(workspaceId);
+            File keyPath = new File(path, "key.txt");
+            File secretPath = new File(path, "secret.txt");
+
+            if (!keyPath.exists() && !secretPath.exists()) {
+                Files.write(keyPath.toPath(), key.getBytes("UTF-8"));
+                Files.write(secretPath.toPath(), secret.getBytes("UTF-8"));
+
+                return true;
+            } else {
+                return false;
+            }
+        } catch (IOException ioe) {
+            throw new WorkspaceComponentException("Could not create workspace " + workspaceId, ioe);
+        }
+    }
+
+    @Override
     public String getWorkspace(long workspaceId) throws WorkspaceComponentException {
         try {
             File path = getPathToWorkspace(workspaceId);

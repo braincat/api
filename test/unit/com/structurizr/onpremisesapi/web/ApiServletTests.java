@@ -60,6 +60,125 @@ public class ApiServletTests {
     }
 
     @Test
+    public void test_doPost_ReturnsAnApiError_WhenANegativeWorkspaceIdIsSpecified() throws Exception {
+        request.setPathInfo("/-1");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"Workspace ID must be greater than 1\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenANonNumericWorkspaceIdIsSpecified() throws Exception {
+        request.setPathInfo("/abc");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"Workspace ID must be a number\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenAKeyIsNotSpecified() throws Exception {
+        request.setPathInfo("/1234");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"A 36 character API key must be specified using the parameter name 'key'\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenAnEmptyKeyIsSpecified() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"A 36 character API key must be specified using the parameter name 'key'\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenAnInvalidKeyIsSpecified() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "key");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"A 36 character API key must be specified using the parameter name 'key'\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenASecretIsNotSpecified() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"A 36 character API secret must be specified using the parameter name 'secret'\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenAnEmptySecretIsSpecified() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
+        request.setParameter("secret", "");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"A 36 character API secret must be specified using the parameter name 'secret'\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenAnInvalidSecretIsSpecified() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
+        request.setParameter("secret", "secret");
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"A 36 character API secret must be specified using the parameter name 'secret'\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenTheWorkspaceCouldNotBeCreated() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
+        request.setParameter("secret", "670a738a-d334-4f25-a5b4-003c2b5afe95");
+        apiServlet.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException {
+                return false;
+            }
+        });
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"Workspace 1234 already exists\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiError_WhenAWorkspaceComponentExceptionIsThrown() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
+        request.setParameter("secret", "670a738a-d334-4f25-a5b4-003c2b5afe95");
+        apiServlet.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException {
+                throw new WorkspaceComponentException("Some message");
+            }
+        });
+        apiServlet.doPost(request, response);
+        assertEquals(500, response.getStatus());
+        assertEquals("{\"message\":\"Some message\"}", response.getContent());
+    }
+
+    @Test
+    public void test_doPost_ReturnsAnApiSuccessMessage_WhenTheWorkspaceCouldBeCreated() throws Exception {
+        request.setPathInfo("/1234");
+        request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
+        request.setParameter("secret", "670a738a-d334-4f25-a5b4-003c2b5afe95");
+        apiServlet.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException {
+                return true;
+            }
+        });
+        apiServlet.doPost(request, response);
+        assertEquals(200, response.getStatus());
+        assertEquals("{\"message\":\"OK\"}", response.getContent());
+    }
+
+    @Test
     public void test_doOptions_AddsAccessControlHeaders() throws Exception {
         apiServlet.doOptions(request, response);
 
@@ -258,6 +377,7 @@ class MockHttpServletRequest implements HttpServletRequest {
 
     private String pathInfo;
     private Map<String,String> headers = new HashMap<>();
+    private Map<String,String> parameters = new HashMap<>();
     private StringReader stringReader;
 
     void setContent(String content) {
@@ -431,9 +551,13 @@ class MockHttpServletRequest implements HttpServletRequest {
         return null;
     }
 
+    void setParameter(String name, String value) {
+        this.parameters.put(name, value);
+    }
+
     @Override
-    public String getParameter(String s) {
-        return null;
+    public String getParameter(String name) {
+        return this.parameters.get(name);
     }
 
     @Override
@@ -867,6 +991,11 @@ class MockServletContext implements ServletContext {
 class MockWorkspaceComponent implements WorkspaceComponent {
 
     private Map<Long,String> workspaces = new HashMap<>();
+
+    @Override
+    public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException {
+        return false;
+    }
 
     @Override
     public String getWorkspace(long workspaceId) throws WorkspaceComponentException {

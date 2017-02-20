@@ -11,6 +11,8 @@ import java.io.File;
 @Component(technology = "Java")
 public interface WorkspaceComponent {
 
+    public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException;
+
     public String getWorkspace(long workspaceId) throws WorkspaceComponentException;
 
     public void putWorkspace(long workspaceId, String json) throws WorkspaceComponentException;

@@ -17,6 +17,33 @@ public class FileSystemWorkspaceComponentTests {
     private FileSystemWorkspaceComponent workspaceComponent = new FileSystemWorkspaceComponent(dataDirectory);
 
     @Test
+    public void test_createWorkspace_ReturnsFalse_WhenTheAPIKeyAlreadyExists() throws Exception {
+        File dir = new File(dataDirectory, "1");
+        dir.mkdirs();
+        File file = new File(dir, "key.txt");
+        Files.write(file.toPath(), "2b1a855d-3825-4659-8ad2-79c2d96f8be2".getBytes());
+
+        assertFalse(workspaceComponent.createWorkspace(1, "key", "secret"));
+    }
+
+    @Test
+    public void test_createWorkspace_ReturnsFalse_WhenTheAPISecretAlreadyExists() throws Exception {
+        File dir = new File(dataDirectory, "1");
+        dir.mkdirs();
+        File file = new File(dir, "secret.txt");
+        Files.write(file.toPath(), "2b1a855d-3825-4659-8ad2-79c2d96f8be2".getBytes());
+
+        assertFalse(workspaceComponent.createWorkspace(1, "key", "secret"));
+    }
+
+    @Test
+    public void test_createWorkspace_SavesTheAPIKeyAndSecret_WhenTheAPIKeyAndSecretDoNotExist() throws Exception {
+        assertTrue(workspaceComponent.createWorkspace(1, "key", "secret"));
+        assertEquals("key", workspaceComponent.getApiKey(1));
+        assertEquals("secret", workspaceComponent.getApiSecret(1));
+    }
+
+    @Test
     public void test_putAndGetWorkspace() throws Exception {
 
         String content = "Here is some JSON";

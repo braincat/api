@@ -30,6 +30,8 @@ import java.util.stream.Collectors;
 @UsedBySoftwareSystem(name = "Structurizr Client", description = "Gets and puts workspaces using")
 public class ApiServlet extends HttpServlet {
 
+    private static final int GUID_LENGTH = 36;
+
     @UsesComponent(description = "Gets and puts workspace data using")
     private WorkspaceComponent workspaceComponent;
 
@@ -43,6 +45,35 @@ public class ApiServlet extends HttpServlet {
 
     void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
         this.workspaceComponent = workspaceComponent;
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            long workspaceId = getWorkspaceId(request, response);
+            if (workspaceId > 0) {
+                String key = request.getParameter("key");
+                String secret = request.getParameter("secret");
+
+                if ((key == null || key.length() != GUID_LENGTH)) {
+                    send(new ApiError("A 36 character API key must be specified using the parameter name 'key'"), response);
+                    return;
+                }
+
+                if ((secret == null || secret.length() != GUID_LENGTH)) {
+                    send(new ApiError("A 36 character API secret must be specified using the parameter name 'secret'"), response);
+                    return;
+                }
+
+                if (workspaceComponent.createWorkspace(workspaceId, key, secret)) {
+                    send(new ApiSuccessMessage(), response);
+                } else {
+                    send(new ApiError("Workspace " + workspaceId + " already exists"), response);
+                }
+            }
+        } catch (WorkspaceComponentException e) {
+            send(new ApiError(e), response);
+        }
     }
 
     @Override
