@@ -2,6 +2,7 @@ package com.structurizr.onpremisesapi.web;
 
 import com.structurizr.annotation.UsedBySoftwareSystem;
 import com.structurizr.annotation.UsesComponent;
+import com.structurizr.onpremisesapi.domain.UUID;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
 
@@ -30,8 +31,6 @@ import java.util.stream.Collectors;
 @UsedBySoftwareSystem(name = "Structurizr Client", description = "Gets and puts workspaces using")
 public class ApiServlet extends HttpServlet {
 
-    private static final int GUID_LENGTH = 36;
-
     @UsesComponent(description = "Gets and puts workspace data using")
     private WorkspaceComponent workspaceComponent;
 
@@ -55,13 +54,13 @@ public class ApiServlet extends HttpServlet {
                 String key = request.getParameter("key");
                 String secret = request.getParameter("secret");
 
-                if ((key == null || key.length() != GUID_LENGTH)) {
-                    send(new ApiError("A 36 character API key must be specified using the parameter name 'key'"), response);
+                if ((key == null || !UUID.isUUID(key))) {
+                    send(new ApiError("A 36 character API key (UUID) must be specified using the parameter name 'key'"), response);
                     return;
                 }
 
-                if ((secret == null || secret.length() != GUID_LENGTH)) {
-                    send(new ApiError("A 36 character API secret must be specified using the parameter name 'secret'"), response);
+                if ((secret == null || !UUID.isUUID(secret))) {
+                    send(new ApiError("A 36 character API secret (UUID) must be specified using the parameter name 'secret'"), response);
                     return;
                 }
 

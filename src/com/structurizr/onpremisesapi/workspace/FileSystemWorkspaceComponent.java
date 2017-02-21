@@ -1,15 +1,14 @@
 package com.structurizr.onpremisesapi.workspace;
 
 import com.structurizr.annotation.UsesContainer;
+import com.structurizr.onpremisesapi.domain.UUID;
 
 import javax.imageio.ImageIO;
 import java.awt.image.RenderedImage;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -17,8 +16,6 @@ import java.util.Collection;
  */
 @UsesContainer(name = "File System", description = "Gets information from")
 class FileSystemWorkspaceComponent implements WorkspaceComponent {
-
-    private static final int GUID_LENGTH = 36;
 
     private File dataDirectory;
 
@@ -38,13 +35,13 @@ class FileSystemWorkspaceComponent implements WorkspaceComponent {
                     WorkspaceSummary workspace = new WorkspaceSummary(workspaceId);
 
                     try {
-                        workspace.setKey(getApiKey(workspaceId).length() == GUID_LENGTH);
+                        workspace.setKey(UUID.isUUID(getApiKey(workspaceId)));
                     } catch (WorkspaceComponentException e) {
                         workspace.setKey(false);
                     }
 
                     try {
-                        workspace.setSecret(getApiSecret(workspaceId).length() == GUID_LENGTH);
+                        workspace.setSecret(UUID.isUUID(getApiSecret(workspaceId)));
                     } catch (WorkspaceComponentException e) {
                         workspace.setSecret(false);
                     }
