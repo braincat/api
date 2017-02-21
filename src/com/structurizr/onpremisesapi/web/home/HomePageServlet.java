@@ -1,5 +1,6 @@
 package com.structurizr.onpremisesapi.web.home;
 
+import com.structurizr.annotation.UsedByPerson;
 import com.structurizr.annotation.UsesComponent;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
 
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@UsedByPerson(name = "Software Developer", description = "Views API information using")
 public class HomePageServlet extends HttpServlet {
 
     private static final int GUID_LENGTH = 36;
