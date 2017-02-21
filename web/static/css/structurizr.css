@@ -4,6 +4,10 @@ body {
     padding-right: 0;
     padding-top: 50px;
 }
+footer {
+    padding: 20px;
+    text-align: center;
+}
 .centered {
     text-align: center;
 }
@@ -45,6 +49,13 @@ h2 {
 h3 {
     font-size: 20px;
     font-weight: normal;
+}
+a {
+    color: #1168BD;
+}
+code {
+    color: #08427B;
+    background: #E9F4FE;
 }
 
 /* cyrillic-ext */

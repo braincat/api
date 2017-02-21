@@ -36,8 +36,9 @@
         <div class="container centered">
             <h2>Structurizr API</h2>
             <p>
+                This web application is a simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's <a href="https://structurizr.com/help/on-premises-api">on-premises API feature</a>.
                 The API URL is <code>http://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}</code>
-                and workspace data is being stored at <code>${initParam['dataDirectory']}</code>. Here is a summary of the workspaces that have been configured:
+                and workspace data is being stored at <code>${initParam['dataDirectory']}</code>. Here is a summary of the workspaces that have been configured.
             </p>
 
             <br />
@@ -62,5 +63,11 @@
             </table>
         </div>
     </div>
+
+    <footer>
+        <a href="https://structurizr.com/public/18571/documentation">Documentation</a>
+        |
+        <a href="https://github.com/structurizr/api">Source code</a>
+    </footer>
 </body>
 </html>
