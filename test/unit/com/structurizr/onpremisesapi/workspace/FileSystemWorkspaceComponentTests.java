@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.awt.image.RenderedImage;
 import java.io.File;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -77,7 +76,7 @@ public class FileSystemWorkspaceComponentTests {
             workspaceComponent.getApiKey(1);
             fail();
         } catch (WorkspaceComponentException e) {
-            assertEquals("Could not find API key at " + dataDirectory.getCanonicalPath() + "/1/key.txt", e.getMessage());
+            assertEquals("Could not find API key at " + dataDirectory.getCanonicalPath() + File.separator + "1" + File.separator + "key.txt", e.getMessage());
         }
     }
 
@@ -97,7 +96,7 @@ public class FileSystemWorkspaceComponentTests {
             workspaceComponent.getApiSecret(1);
             fail();
         } catch (WorkspaceComponentException e) {
-            assertEquals("Could not find API secret at " + dataDirectory.getCanonicalPath() + "/1/secret.txt", e.getMessage());
+            assertEquals("Could not find API secret at " + dataDirectory.getCanonicalPath() + File.separator + "1" + File.separator + "secret.txt", e.getMessage());
         }
     }
 
