@@ -2,6 +2,7 @@ package com.structurizr.onpremisesapi.web;
 
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
+import com.structurizr.onpremisesapi.workspace.WorkspaceSummary;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -991,6 +992,11 @@ class MockServletContext implements ServletContext {
 class MockWorkspaceComponent implements WorkspaceComponent {
 
     private Map<Long,String> workspaces = new HashMap<>();
+
+    @Override
+    public Collection<WorkspaceSummary> getWorkspaces() {
+        return null;
+    }
 
     @Override
     public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException {

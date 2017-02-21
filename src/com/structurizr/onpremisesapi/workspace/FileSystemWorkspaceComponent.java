@@ -8,18 +8,59 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * A simple workspace component implementation that uses the local file system.
  */
-@UsesContainer(name = "File System", description = "Stores information on")
+@UsesContainer(name = "File System", description = "Gets information from")
 class FileSystemWorkspaceComponent implements WorkspaceComponent {
+
+    private static final int GUID_LENGTH = 36;
 
     private File dataDirectory;
 
-    public FileSystemWorkspaceComponent(File dataDirectory) {
+    FileSystemWorkspaceComponent(File dataDirectory) {
         this.dataDirectory = dataDirectory;
+    }
+
+    @Override
+    public Collection<WorkspaceSummary> getWorkspaces() {
+        Collection<WorkspaceSummary> workspaces = new ArrayList<>();
+
+        File[] files = dataDirectory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file != null && file.isDirectory() && file.getName().matches("\\d*")) {
+                    long workspaceId = Long.parseLong(file.getName());
+                    WorkspaceSummary workspace = new WorkspaceSummary(workspaceId);
+
+                    try {
+                        workspace.setKey(getApiKey(workspaceId).length() == GUID_LENGTH);
+                    } catch (WorkspaceComponentException e) {
+                        workspace.setKey(false);
+                    }
+
+                    try {
+                        workspace.setSecret(getApiSecret(workspaceId).length() == GUID_LENGTH);
+                    } catch (WorkspaceComponentException e) {
+                        workspace.setSecret(false);
+                    }
+
+                    try {
+                        workspace.setData(!getWorkspace(workspaceId).equals("{}"));
+                    } catch (WorkspaceComponentException e) {
+                        workspace.setData(false);
+                    };
+
+                    workspaces.add(workspace);
+                }
+            }
+        }
+
+        return workspaces;
     }
 
     @Override

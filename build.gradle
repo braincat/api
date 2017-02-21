@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
     compile 'javax.servlet:servlet-api:2.5'
+    compile 'javax.servlet:jstl:1.2'
     compile 'com.structurizr:structurizr-annotations:1.0.0-RC2'
     testCompile 'junit:junit:4.12'
 }

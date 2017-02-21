@@ -3,11 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <servlet>
+        <servlet-name>HomePageServlet</servlet-name>
+        <servlet-class>com.structurizr.onpremisesapi.web.home.HomePageServlet</servlet-class>
+    </servlet>
+
     <servlet>
         <servlet-name>ApiServlet</servlet-name>
         <servlet-class>com.structurizr.onpremisesapi.web.ApiServlet</servlet-class>
     </servlet>
-    
+
+    <servlet-mapping>
+        <servlet-name>HomePageServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>ApiServlet</servlet-name>
         <url-pattern>/workspace/*</url-pattern>
@@ -22,6 +33,10 @@
         <error-code>404</error-code>
         <location>/WEB-INF/views/404.jsp</location>
     </error-page>
+    
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
 
     <security-constraint>
         <web-resource-collection>

@@ -4,12 +4,15 @@ import com.structurizr.annotation.Component;
 
 import java.awt.image.RenderedImage;
 import java.io.File;
+import java.util.Collection;
 
 /**
  * Responsible for managing workspace information (workspace definitions plus API keys and secrets).
  */
 @Component(technology = "Java")
 public interface WorkspaceComponent {
+
+    public Collection<WorkspaceSummary> getWorkspaces();
 
     public boolean createWorkspace(long workspaceId, String key, String secret) throws WorkspaceComponentException;
 
