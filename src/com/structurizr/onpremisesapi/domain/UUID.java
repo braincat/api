@@ -4,11 +4,14 @@ public final class UUID {
 
     public static boolean isUUID(String uuid) {
         try {
-            java.util.UUID.fromString(uuid);
-            return true;
+            if (uuid != null) {
+                java.util.UUID.fromString(uuid);
+                return true;
+            }
         } catch (IllegalArgumentException iae) {
-            return false;
         }
+
+        return false;
     }
 
 }

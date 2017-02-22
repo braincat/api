@@ -221,6 +221,12 @@ public class ApiServlet extends HttpServlet {
     }
 
     private boolean isAuthorised(long workspaceId, String httpMethod, String path, String content, boolean bypassHMacValidation, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String key = request.getParameter("key");
+        String secret = request.getParameter("secret");
+        if (UUID.isUUID(key) && UUID.isUUID(secret) && key.equals(workspaceComponent.getApiKey(workspaceId)) && secret.equals(workspaceComponent.getApiSecret(workspaceId))) {
+            return true;
+        }
+
         String authorizationHeaderAsString = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (authorizationHeaderAsString == null || authorizationHeaderAsString.trim().length() == 0) {
