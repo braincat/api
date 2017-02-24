@@ -1,3 +1,5 @@
+# Development Environment
+
 This section describes the development environment required for contributing and building the Structurizr API.
 
 ## Building

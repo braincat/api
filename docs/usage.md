@@ -1,3 +1,5 @@
+# Usage
+
 To use the on-premises API feature from Structurizr, you need to be subscribed to a [paid plan](https://structurizr.com/pricing) or the free trial.
 
 ### Creating a remote workspace

@@ -35,6 +35,11 @@ public class HomePageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setAttribute("workspaces", workspaceComponent.getWorkspaces());
+        String apiUrl = request.getRequestURL().toString();
+        if (apiUrl.endsWith("/")) {
+            apiUrl = apiUrl.substring(0, apiUrl.length()-1);
+        }
+        request.setAttribute("apiUrl", apiUrl);
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/views/home.jsp");
         dispatcher.forward(request,response);

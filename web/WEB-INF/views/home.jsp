@@ -34,11 +34,17 @@
 
     <div class="section">
         <div class="container centered">
-            <h2>Structurizr API</h2>
+            <h1>Structurizr API</h1>
             <p>
                 This web application is a simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's <a href="https://structurizr.com/help/on-premises-api">on-premises API feature</a>.
-                The API URL is <code>http://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}</code>
-                and workspace data is being stored at <code>${initParam['dataDirectory']}</code>. Here is a summary of the workspaces that have been configured.
+                The API URL is <code>${apiUrl}</code>.
+            </p>
+
+            <h2>Workspaces</h2>
+            <c:choose>
+            <c:when test="${not empty workspaces}">
+            <p>
+                Workspace data is being stored at <code>${initParam['dataDirectory']}</code> and here is a summary of the workspaces that have been configured.
             </p>
 
             <br />
@@ -52,15 +58,22 @@
                     <th class="centered" width="25%">Data</th>
                 </tr>
                 </thead>
-            <c:forEach var="workspace" items="${workspaces}">
-                <tr>
-                    <td class="centered">${workspace.id}</td>
-                    <td class="centered"><c:choose><c:when test="${workspace.key}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
-                    <td class="centered"><c:choose><c:when test="${workspace.secret}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
-                    <td class="centered"><c:choose><c:when test="${workspace.data}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
-                </tr>
-            </c:forEach>
+                <c:forEach var="workspace" items="${workspaces}">
+                    <tr>
+                        <td class="centered">${workspace.id}</td>
+                        <td class="centered"><c:choose><c:when test="${workspace.key}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
+                        <td class="centered"><c:choose><c:when test="${workspace.secret}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
+                        <td class="centered"><c:choose><c:when test="${workspace.data}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
+                    </tr>
+                </c:forEach>
             </table>
+            </c:when>
+            <c:otherwise>
+            <p>
+                Workspace data is being stored at <code>${initParam['dataDirectory']}</code> but there are no workspaces configured yet.
+            </p>
+            </c:otherwise>
+            </c:choose>
         </div>
     </div>
 

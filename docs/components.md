@@ -1,3 +1,5 @@
+# Components
+
 The diagram below shows the components that make up the API Application.
 
 ![](embed:Components)
