@@ -445,7 +445,7 @@ class MockHttpServletRequest implements HttpServletRequest {
 
     @Override
     public String getContextPath() {
-        return null;
+        return "/";
     }
 
     @Override

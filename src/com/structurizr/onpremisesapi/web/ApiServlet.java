@@ -89,7 +89,7 @@ public class ApiServlet extends HttpServlet {
             if (workspaceId > 0) {
                 String resource = getResource(request);
                 if (resource == null) {
-                    if (isAuthorised(workspaceId, "GET", "/workspace/" + workspaceId, null, true, request, response)) {
+                    if (isAuthorised(workspaceId, "GET", getPath(request, workspaceId), null, true, request, response)) {
                         String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId);
 
                         response.setCharacterEncoding("UTF-8");
@@ -142,6 +142,15 @@ public class ApiServlet extends HttpServlet {
         }
     }
 
+    private String getPath(HttpServletRequest request, long workspaceId) {
+        String contextPath = request.getContextPath();
+        if (!contextPath.endsWith("/")) {
+            contextPath = contextPath + "/";
+        }
+
+        return contextPath + "workspace/" + workspaceId;
+    }
+
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -151,7 +160,7 @@ public class ApiServlet extends HttpServlet {
             if (workspaceId > 0) {
                 String workspaceAsJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
-                if (isAuthorised(workspaceId, "PUT", "/workspace/" + workspaceId, workspaceAsJson, false, request, response)) {
+                if (isAuthorised(workspaceId, "PUT", getPath(request, workspaceId), workspaceAsJson, false, request, response)) {
                     workspaceComponent.putWorkspace(workspaceId, workspaceAsJson);
 
                     send(new ApiSuccessMessage(), response);
