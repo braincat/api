@@ -60,7 +60,7 @@
                 </thead>
                 <c:forEach var="workspace" items="${workspaces}">
                     <tr>
-                        <td class="centered">${workspace.id}</td>
+                        <td class="centered"><a href="https://structurizr.com/workspace/${workspace.id}">${workspace.id}</a></td>
                         <td class="centered"><c:choose><c:when test="${workspace.key}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
                         <td class="centered"><c:choose><c:when test="${workspace.secret}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>
                         <td class="centered"><c:choose><c:when test="${workspace.data}"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></c:when><c:otherwise><span class="glyphicon glyphicon-remove" aria-hidden="true"></c:otherwise></c:choose></td>

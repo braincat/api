@@ -49,25 +49,27 @@ public class ApiServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            addAccessControlAllowHeaders(response);
+
             long workspaceId = getWorkspaceId(request, response);
             if (workspaceId > 0) {
                 String key = request.getParameter("key");
                 String secret = request.getParameter("secret");
 
                 if ((key == null || !UUID.isUUID(key))) {
-                    send(new ApiError("A 36 character API key (UUID) must be specified using the parameter name 'key'"), response);
+                    send(new ApiError("A 36 character API key (UUID) must be specified using the parameter name 'key'."), response);
                     return;
                 }
 
                 if ((secret == null || !UUID.isUUID(secret))) {
-                    send(new ApiError("A 36 character API secret (UUID) must be specified using the parameter name 'secret'"), response);
+                    send(new ApiError("A 36 character API secret (UUID) must be specified using the parameter name 'secret'."), response);
                     return;
                 }
 
                 if (workspaceComponent.createWorkspace(workspaceId, key, secret)) {
-                    send(new ApiSuccessMessage(), response);
+                    send(new ApiSuccessMessage("The key and secret for workspace " + workspaceId + " have been updated."), response);
                 } else {
-                    send(new ApiError("Workspace " + workspaceId + " already exists"), response);
+                    send(new ApiError("A key and secret pair for workspace " + workspaceId + " already exists."), response);
                 }
             }
         } catch (WorkspaceComponentException e) {

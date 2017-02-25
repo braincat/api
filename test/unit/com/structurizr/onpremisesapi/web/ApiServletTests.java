@@ -81,7 +81,7 @@ public class ApiServletTests {
         request.setPathInfo("/1234");
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"A 36 character API key (UUID) must be specified using the parameter name 'key'\"}", response.getContent());
+        assertEquals("{\"message\":\"A 36 character API key (UUID) must be specified using the parameter name 'key'.\"}", response.getContent());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ApiServletTests {
         request.setParameter("key", "");
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"A 36 character API key (UUID) must be specified using the parameter name 'key'\"}", response.getContent());
+        assertEquals("{\"message\":\"A 36 character API key (UUID) must be specified using the parameter name 'key'.\"}", response.getContent());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class ApiServletTests {
         request.setParameter("key", "key");
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"A 36 character API key (UUID) must be specified using the parameter name 'key'\"}", response.getContent());
+        assertEquals("{\"message\":\"A 36 character API key (UUID) must be specified using the parameter name 'key'.\"}", response.getContent());
     }
 
     @Test
@@ -108,7 +108,7 @@ public class ApiServletTests {
         request.setParameter("key", "f76ea707-c778-42f3-8c10-359bb4dfc68f");
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"A 36 character API secret (UUID) must be specified using the parameter name 'secret'\"}", response.getContent());
+        assertEquals("{\"message\":\"A 36 character API secret (UUID) must be specified using the parameter name 'secret'.\"}", response.getContent());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class ApiServletTests {
         request.setParameter("secret", "");
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"A 36 character API secret (UUID) must be specified using the parameter name 'secret'\"}", response.getContent());
+        assertEquals("{\"message\":\"A 36 character API secret (UUID) must be specified using the parameter name 'secret'.\"}", response.getContent());
     }
 
     @Test
@@ -128,7 +128,7 @@ public class ApiServletTests {
         request.setParameter("secret", "secret");
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"A 36 character API secret (UUID) must be specified using the parameter name 'secret'\"}", response.getContent());
+        assertEquals("{\"message\":\"A 36 character API secret (UUID) must be specified using the parameter name 'secret'.\"}", response.getContent());
     }
 
     @Test
@@ -144,7 +144,7 @@ public class ApiServletTests {
         });
         apiServlet.doPost(request, response);
         assertEquals(500, response.getStatus());
-        assertEquals("{\"message\":\"Workspace 1234 already exists\"}", response.getContent());
+        assertEquals("{\"message\":\"A key and secret pair for workspace 1234 already exists.\"}", response.getContent());
     }
 
     @Test
@@ -176,7 +176,7 @@ public class ApiServletTests {
         });
         apiServlet.doPost(request, response);
         assertEquals(200, response.getStatus());
-        assertEquals("{\"message\":\"OK\"}", response.getContent());
+        assertEquals("{\"message\":\"The key and secret for workspace 1234 have been updated.\"}", response.getContent());
     }
 
     @Test
