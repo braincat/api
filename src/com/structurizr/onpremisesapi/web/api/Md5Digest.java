@@ -1,4 +1,4 @@
-package com.structurizr.onpremisesapi.web;
+package com.structurizr.onpremisesapi.web.api;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;

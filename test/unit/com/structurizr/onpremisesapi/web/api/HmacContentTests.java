@@ -1,6 +1,6 @@
-package com.structurizr.onpremisesapi.web;
+package com.structurizr.onpremisesapi.web.api;
 
-import com.structurizr.onpremisesapi.web.HmacContent;
+import com.structurizr.onpremisesapi.web.api.HmacContent;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

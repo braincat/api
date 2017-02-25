@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Handles requests for the home page.
+ */
 @UsedByPerson(name = "Software Developer", description = "Views API information using")
 public class HomePageServlet extends HttpServlet {
 

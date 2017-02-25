@@ -1,6 +1,6 @@
-package com.structurizr.onpremisesapi.web;
+package com.structurizr.onpremisesapi.web.api;
 
-import com.structurizr.onpremisesapi.web.Md5Digest;
+import com.structurizr.onpremisesapi.web.api.Md5Digest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

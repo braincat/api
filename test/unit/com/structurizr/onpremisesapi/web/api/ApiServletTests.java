@@ -1,4 +1,4 @@
-package com.structurizr.onpremisesapi.web;
+package com.structurizr.onpremisesapi.web.api;
 
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
@@ -12,8 +12,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.*;
 import java.net.MalformedURLException;

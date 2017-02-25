@@ -1,4 +1,4 @@
-package com.structurizr.onpremisesapi.web;
+package com.structurizr.onpremisesapi.web.api;
 
 class ApiDataResponse extends ApiResponse {
 

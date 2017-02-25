@@ -41,7 +41,7 @@ public class Structurizr {
         Container apiApplication = structurizrApi.addContainer("API Application", "A simple implementation of the Structurizr API, which is designed to be run on-premises to support Structurizr's on-premises API feature.", "Java EE web application");
         Container fileSystem = structurizrApi.addContainer("File System", "Stores workspace data.", "Local or network file system");
 
-        structurizr.uses(apiApplication, "Gets and puts workspaces using");
+        structurizr.uses(apiApplication, "Gets and puts workspaces using", "JSON/HTTPS");
         apiApplication.uses(fileSystem, "Stores information on");
 
         // components
@@ -83,7 +83,7 @@ public class Structurizr {
         ContainerView containerView = views.createContainerView(structurizrApi, "Containers", "The containers that make up the Structurizr API.");
         containerView.addAllElements();
 
-        ComponentView componentView = views.createComponentView(apiApplication, "Components", "The components within the API Server.");
+        ComponentView componentView = views.createComponentView(apiApplication, "Components", "The components within the API Application.");
         componentView.addAllElements();
 
         // tags
@@ -99,7 +99,7 @@ public class Structurizr {
         styles.addElementStyle(Tags.SOFTWARE_SYSTEM);
         styles.addElementStyle(Tags.PERSON).shape(Shape.Person);
         styles.addElementStyle(Tags.CONTAINER);
-        styles.addElementStyle(Tags.COMPONENT).fontSize(22);
+        styles.addElementStyle(Tags.COMPONENT).fontSize(20);
         styles.addElementStyle(ON_THE_CLOUD).background("#85bbf0");
         styles.addElementStyle(BEHIND_FIREWALL).background("#1168bd");
 

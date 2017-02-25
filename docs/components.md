@@ -6,7 +6,7 @@ The diagram below shows the components that make up the API Application.
 
 ## HomePageServlet
 
-This Java Servlet serves requests for the home page.
+This Java Servlet handles requests for the home page.
 
 ## ApiServlet
 
