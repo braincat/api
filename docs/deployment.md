@@ -2,14 +2,15 @@
 
 ## Java EE server
 
-To deploy the Structurizr API into your Java EE server, follow the deployment instructions provided by the server vendor. For Apache Tomcat, the simplest method is to copy the WAR file to the ```$CATALINA_HOME/webapps``` directory. To run the on-premises API as the root web application, rename the WAR file to be <code>ROOT.war</code>.
+To deploy the Structurizr API into your Java EE server, follow the deployment instructions provided by the server vendor.
+For Apache Tomcat, the simplest method is to copy the WAR file to the ```$CATALINA_HOME/webapps``` directory.
+To run the on-premises API as the root web application, rename the WAR file to be ```ROOT.war```.
 
 Additionally, the on-premises API server needs to be accessible over HTTPS; see [SSL/TLS Configuration HOW-TO](https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html) for information about configuring HTTPS in Apache Tomcat.
 
 ## Docker
 
 The [GitHub repository](https://github.com/structurizr/api) also includes a Dockerfile that can be used to create a Docker image consisting of Java 8, Apache Tomcat 8.x and the Structurizr API web application.
-
 A __pre-built Docker image__ is available on the [Docker Hub](https://hub.docker.com/r/structurizr/api/). You can pull a copy of the image using the following command.
 
 ```
@@ -42,7 +43,6 @@ To support HTTPS, Apache Tomcat within the Docker container is configured to loo
 ## Same-origin policy and SSL
 
 Due to the [Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), the on-premises API needs to be accessible using HTTPS. A self-signed certificate is sufficient.
-
 Although configuring an SSL certificate is out of the scope of this documentation, you can get started by generating a self-signed certificate using the following command.
 
 ```

@@ -1,15 +1,24 @@
 # Development Environment
 
-This section describes the development environment required for contributing and building the Structurizr API.
+This section describes the development environment required to build the Structurizr API.
 
-## Building
+## Getting the source code
 
-To build the Structurizr API from the source code, you need to clone this repository and run the Gradle build. Java 8 is required.
+The source code is open source and available on GitHub at [https://github.com/structurizr/api](https://github.com/structurizr/api).
+
+Assuming that you have ```git``` installed, use the following command to clone the repo.
 
 ```
 git clone https://github.com/structurizr/api.git structurizr-api
-cd structurizr-api
-./gradlew build assemble
 ```
 
-The ```build/libs``` directory will contain the assembled WAR file when the build is successful.
+## Building
+
+To build the Structurizr API from the source code, simply run the Gradle build (Java 8 is required).
+
+```
+cd structurizr-api
+./gradlew build
+```
+
+The ```build/libs``` directory will contain the assembled WAR file (e.g. ```structurizr-api-x.y.war```) when the build is successful.

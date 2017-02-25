@@ -20,7 +20,7 @@ StructurizrClient structurizrClient = new StructurizrClient("0bca9de2-f0f2-4044-
 structurizrClient.putWorkspace(28201, workspace);
 ```
 
-If this succeeded, you will see a message in the program output.
+If successful, you will see a message in the program output.
 
 ```
 INFO  StructurizrClient - Putting workspace with ID 28201

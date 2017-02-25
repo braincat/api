@@ -99,7 +99,7 @@ public class Structurizr {
         styles.addElementStyle(Tags.SOFTWARE_SYSTEM);
         styles.addElementStyle(Tags.PERSON).shape(Shape.Person);
         styles.addElementStyle(Tags.CONTAINER);
-        styles.addElementStyle(Tags.COMPONENT);
+        styles.addElementStyle(Tags.COMPONENT).fontSize(22);
         styles.addElementStyle(ON_THE_CLOUD).background("#85bbf0");
         styles.addElementStyle(BEHIND_FIREWALL).background("#1168bd");
 
