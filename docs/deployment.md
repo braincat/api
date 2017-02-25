@@ -1,12 +1,10 @@
 # Deployment
 
+## Java EE server
+
 To deploy the Structurizr API into your Java EE server, follow the deployment instructions provided by the server vendor. For Apache Tomcat, the simplest method is to copy the WAR file to the ```$CATALINA_HOME/webapps``` directory. To run the on-premises API as the root web application, rename the WAR file to be <code>ROOT.war</code>.
 
-Due to the [Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), the Structurizr API needs to be accessible using HTTPS. A self-signed certificate is sufficient. See [SSL/TLS Configuration HOW-TO](https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html) for information about configuring HTTPS in Apache Tomcat.
-
-If deployment is successful, you should see a page like this when you navigate to the webapp URL in your web browser.
-
-![The Structurizr API home page](structurizr-api-home-page.png)
+Additionally, the on-premises API server needs to be accessible over HTTPS; see [SSL/TLS Configuration HOW-TO](https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html) for information about configuring HTTPS in Apache Tomcat.
 
 ## Docker
 
@@ -24,6 +22,8 @@ You can then run the Docker image using a command like the following.
 docker run -p 9999:8443 -v /Users/simon/structurizr:/usr/local/structurizr structurizr/api
 ```
 
+After starting the Docker container, you should be able to navigate to, for example, [https://localhost:9999](https://localhost:9999) in your web browser and see the Structurizr API home page.
+
 ### Publishing the HTTPS port
 
 By default, the Docker container doesn't expose any ports, although Apache Tomcat is listening for HTTPS requests on port 8443. The ```-p 9999:8443``` parameter in the above command publishes this port, making it accessible outside of the container on port 9999.
@@ -36,8 +36,12 @@ The ```-v /Users/simon/structurizr:/usr/local/structurizr``` parameter in the ab
 
 ### Configuring HTTPS
 
-To support HTTPS, Apache Tomcat within the Docker container is preconfigured to look for a Java keystore at ```/usr/local/structurizr/keystore.jks``` and if you start the container without providing a Java keystore, you will see the following error message.
+To support HTTPS, Apache Tomcat within the Docker container is configured to look for a Java keystore at ```/usr/local/structurizr/keystore.jks``` and if you start the container without providing a Java keystore, you will see the following error message.
 ```java.io.FileNotFoundException: /usr/local/structurizr/keystore.jks (No such file or directory)```
+
+## Same-origin policy and SSL
+
+Due to the [Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), the on-premises API needs to be accessible using HTTPS. A self-signed certificate is sufficient.
 
 Although configuring an SSL certificate is out of the scope of this documentation, you can get started by generating a self-signed certificate using the following command.
 
@@ -69,4 +73,8 @@ Enter key password for <tomcat>
 	(RETURN if same as keystore password): 
 ```
 
-After starting the Docker container, you should be able to navigate to, for example, [https://localhost:9999](https://localhost:9999) in your web browser and see the Structurizr API home page. You will need to trust the certificate in your web browser if using a self-signed certificate.
+If deployment is successful, you should see a page like this when you navigate to the webapp URL in your web browser.
+
+![The Structurizr API home page](structurizr-api-home-page.png)
+
+You will need to trust the certificate in your web browser if using a self-signed certificate.
