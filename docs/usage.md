@@ -41,6 +41,12 @@ echo '5855ca93-73f6-4736-95c5-d7b6e2f43c30' > key.txt
 echo '6fc691f0-789a-4075-8c6a-707e80c0537c' > secret.txt
 ```
 
+Alternatively, you can POST the data to the local API server, using a command like the following.
+
+```
+curl --data "key=5855ca93-73f6-4736-95c5-d7b6e2f43c30&secret=6fc691f0-789a-4075-8c6a-707e80c0537c" https://localhost:9999/workspace/18561 --insecure
+```
+
 ### Using the local workspace
 
 You can now use the Structurizr client library in the usual way, with the exception that the remote API URL needs to be specified when creating the ```StructurizrClient``` object.
@@ -77,6 +83,12 @@ If using the Java client, you can use ```javax.net.ssl.trustStore``` JVM option 
 
 ```
 -Djavax.net.ssl.trustStore=/Users/simon/Desktop/structurizr/keystore.jks
+```
+
+Alternatively, you can specify this property in your Java program.
+
+```
+System.setProperty("javax.net.ssl.trustStore", "/Users/simon/Desktop/structurizr/keystore.jks");
 ```
 
 If using the .NET client, you'll need to export the certificate from the keystore and install it into the "Trusted Root Certification Authories" certificate store. Double-clicking the certificate file in the File Explorer should open the certificate details, from which you can install the certificate.
