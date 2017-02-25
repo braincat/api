@@ -8,6 +8,9 @@
     <link href="static/css/bootstrap-theme-3.3.2.min.css" rel="stylesheet" media="screen" />
     <link href="static/css/structurizr.css" rel="stylesheet" media="screen" />
 
+    <link rel="icon" href="/static/img/favicon.png" />
+    <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png" />
+
     <script src="static/js/jquery-2.0.3.min.js"></script>
     <script src="static/js/lodash-3.10.1.min.js"></script>
     <script src="static/js/backbone-1.2.1.min.js"></script>
