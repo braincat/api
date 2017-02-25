@@ -84,6 +84,8 @@
         <a href="https://structurizr.com/public/18571/documentation">Documentation</a>
         |
         <a href="https://github.com/structurizr/api">Source code</a>
+        |
+        Version 0.3
     </footer>
 </body>
 </html>
