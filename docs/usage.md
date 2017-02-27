@@ -1,8 +1,8 @@
-# Usage
+## Usage
 
 To use the on-premises API feature from Structurizr, you need to be subscribed to a [paid plan](https://structurizr.com/pricing) or the free trial.
 
-## Create an empty cloud workspace
+### Create an empty cloud workspace
 
 In order to use the on-premises API feature, you need to create a cloud workspace that tells Structurizr where to find the local, on-premises API.
 This is just an empty workspace - none of your data will be stored here.
@@ -31,7 +31,7 @@ You will also notice that the "Cloud" icon has been replaced with one that says,
 
 ![An empty, on-premises workspace](empty-workspace-2.png)
 
-## Copy workspace key and secret to the on-premises API
+### Copy workspace key and secret to the on-premises API
 
 With the remote workspace created, you next need to copy the workspace key and secret to the on-premises API server.
 The easiest way to do this is to click the "Sync" button next to the key and secret on your dashboard (see previous screenshot).
@@ -52,7 +52,7 @@ echo '0bca9de2-f0f2-4044-8837-6b02913d0d6f' > key.txt
 echo '2e994f3a-acee-49be-bd62-9e821055c5b9' > secret.txt
 ```
 
-## Push your workspace to the on-premises API
+### Push your workspace to the on-premises API
 
 You can now use the Structurizr client library in the usual way, with the exception that the on-premises API URL needs to be specified when creating the ```StructurizrClient``` object.
 
@@ -80,7 +80,7 @@ INFO  StructurizrClient - {"message":"OK"}
 
 Loading the workspace by clicking the link on your Structurizr dashboard will now load the workspace data from your on-premises API.
 
-### SSL handshake errors
+#### SSL handshake errors
 
 SSL handshake errors are likely if using a self-signed certificate, because the Structurizr client program runtime won't trust the certificate served by the Structurizr API server.
 
@@ -102,7 +102,7 @@ If using the .NET client, you'll need to export the certificate from the keystor
 keytool -export -keystore keystore.jks -alias tomcat -file tomcat.cer
 ```
 
-## Serving static images
+### Serving static images
 
 Any image files stored in the workspace sub-directory can be accessed using a URL like the following:
 

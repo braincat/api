@@ -1,14 +1,14 @@
-# Components
+## Components
 
 The diagram below shows the components that make up the API Application.
 
 ![](embed:Components)
 
-## HomePageServlet
+### HomePageServlet
 
 This Java Servlet handles requests for the home page.
 
-## ApiServlet
+### ApiServlet
 
 This is a simple Java Servlet that is mapped to a URL path of ```/workspace/*``` and listens for ```GET``` and ```PUT``` requests. A hash-based message authentication code scheme is used for securing the API, and the following headers must be present in the HTTP request.
 
@@ -25,6 +25,6 @@ An ```OPTIONS``` request is also supported for preflighting, which returns the f
 
 The APIServlet will also serve images (".png", ".gif", ".jpg" and ".jpeg") that are stored in the workspace data directory.
 
-## WorkspaceComponent
+### WorkspaceComponent
 
 This component manages the data associated with a workspace. The included implementation simply stores data on the file system - see the [Data](#Data) section for more details.

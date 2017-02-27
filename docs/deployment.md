@@ -1,6 +1,19 @@
-# Deployment
+## Deployment
 
-## Java EE server
+The on-premises API is a Java EE web application, which can be packaged as a WAR file for deployment into any compatible Java EE server.
+It has been tested on Java 8 and Apache Tomcat 7/8.
+
+### Configuration
+
+The on-premises API is configured to use ```/usr/local/structurizr``` for data storage, and this can be changed by modifying the value of the
+ ```dataDirectory``` parameter in the ```web.xml``` file.
+ 
+To make future upgrades simpler, the data storage location can also be configured outside of the web application, by adding a
+JNDI environment entry for the web application context called ```structurizr/api/dataDirectory```.
+With Apache Tomcat, you can do this by [defining a context](http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Defining_a_context)
+and [adding an environment entry](http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Environment_Entries).
+
+### Java EE server
 
 To deploy the Structurizr API into your Java EE server, follow the deployment instructions provided by the server vendor.
 For Apache Tomcat, the simplest method is to copy the WAR file to the ```$CATALINA_HOME/webapps``` directory.
@@ -8,7 +21,14 @@ To run the on-premises API as the root web application, rename the WAR file to b
 
 Additionally, the on-premises API server needs to be accessible over HTTPS; see [SSL/TLS Configuration HOW-TO](https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html) for information about configuring HTTPS in Apache Tomcat.
 
-## Docker
+#### Apache Tomcat on Microsoft Azure
+
+When deploying the on-premises API onto a "Web App" "App Service" running on Microsoft Azure, you may see a ```ERR_TOO_MANY_REDIRECTS``` error in your web browser when trying to view the home page.
+This is caused by Azure terminating the SSL connection before it gets to the Apache Tomcat server, so Apache Tomcat sees a regular HTTP connection.
+Some configuration in the ```web.xml``` file says that all connections must be made using SSL, so Apache Tomcat sends a redirect for the HTTPS version again. And the cycle repeats.
+To fix this, simply remove the entire ```security-constraint``` block from the ```web.xml``` file.
+
+### Docker
 
 The [GitHub repository](https://github.com/structurizr/api) also includes a Dockerfile that can be used to create a Docker image consisting of Java 8, Apache Tomcat 8.x and the Structurizr API web application.
 A __pre-built Docker image__ is available on the [Docker Hub](https://hub.docker.com/r/structurizr/api/). You can pull a copy of the image using the following command.
@@ -25,22 +45,22 @@ docker run -p 9999:8443 -v /Users/simon/structurizr:/usr/local/structurizr struc
 
 After starting the Docker container, you should be able to navigate to, for example, [https://localhost:9999](https://localhost:9999) in your web browser and see the Structurizr API home page.
 
-### Publishing the HTTPS port
+#### Publishing the HTTPS port
 
 By default, the Docker container doesn't expose any ports, although Apache Tomcat is listening for HTTPS requests on port 8443. The ```-p 9999:8443``` parameter in the above command publishes this port, making it accessible outside of the container on port 9999.
 
-### Configuring data storage
+#### Configuring data storage
 
-The Structurizr API is configured to use ```/usr/local/structurizr``` for data storage. On startup of the container, you need to mount a data volume so that the Structurizr API inside the container can store data outside of the container. Keeping the data stored outside of the container allows you to upgrade the container in the future, while retaining your data.
+The on-premises API is configured to use ```/usr/local/structurizr``` for data storage. On startup of the container, you need to mount a data volume so that the Structurizr API inside the container can store data outside of the container. Keeping the data stored outside of the container allows you to upgrade the container in the future, while retaining your data.
 
 The ```-v /Users/simon/structurizr:/usr/local/structurizr``` parameter in the above command maps the local ```/Users/simon/structurizr``` directory to ```/usr/local/structurizr``` inside the container.
 
-### Configuring HTTPS
+#### Configuring HTTPS
 
 To support HTTPS, Apache Tomcat within the Docker container is configured to look for a Java keystore at ```/usr/local/structurizr/keystore.jks``` and if you start the container without providing a Java keystore, you will see the following error message.
 ```java.io.FileNotFoundException: /usr/local/structurizr/keystore.jks (No such file or directory)```
 
-## Same-origin policy and SSL
+### Same-origin policy and SSL
 
 Due to the [Same-origin policy](https://developer.mozilla.org/en-US/docs/Web/Security/Same-origin_policy), the on-premises API needs to be accessible using HTTPS. A self-signed certificate is sufficient.
 Although configuring an SSL certificate is out of the scope of this documentation, you can get started by generating a self-signed certificate using the following command.

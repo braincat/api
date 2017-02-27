@@ -1,4 +1,4 @@
-# Data
+## Data
 
 Workspace data is stored on the file system, in the location defined by the ```dataDirectory``` parameter in the ```web.xml``` configuration file of the API Application. By default, this is set to ```/usr/local/structurizr```.
 
