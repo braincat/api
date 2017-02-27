@@ -46,15 +46,10 @@ public class Structurizr {
 
         // components
         File sourceRoot = new File("../src");
-        TypeBasedComponentFinderStrategy typeBasedComponentFinderStrategy = new TypeBasedComponentFinderStrategy(
-                new NameSuffixTypeMatcher("Servlet", "", "Java Servlet")
-        );
-        typeBasedComponentFinderStrategy.addSupportingTypesStrategy(new ReferencedTypesSupportingTypesStrategy());
 
         ComponentFinder componentFinder = new ComponentFinder(
                 apiApplication,
                 "com.structurizr.onpremisesapi",
-                typeBasedComponentFinderStrategy,
                 new StructurizrAnnotationsComponentFinderStrategy(
                         new FirstImplementationOfInterfaceSupportingTypesStrategy(),
                         new ReferencedTypesSupportingTypesStrategy()

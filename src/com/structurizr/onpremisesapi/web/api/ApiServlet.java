@@ -1,5 +1,6 @@
 package com.structurizr.onpremisesapi.web.api;
 
+import com.structurizr.annotation.Component;
 import com.structurizr.annotation.UsedBySoftwareSystem;
 import com.structurizr.onpremisesapi.domain.UUID;
 import com.structurizr.onpremisesapi.web.AbstractServlet;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  *  - GET /workspace/{id}
  *  - PUT /workspace/{id}
  */
+@Component(technology = "Java Servlet")
 @UsedBySoftwareSystem(name = "Structurizr Client", description = "Gets and puts workspaces using")
 public class ApiServlet extends AbstractServlet {
 

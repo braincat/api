@@ -1,5 +1,6 @@
 package com.structurizr.onpremisesapi.web.home;
 
+import com.structurizr.annotation.Component;
 import com.structurizr.annotation.UsedByPerson;
 import com.structurizr.onpremisesapi.web.AbstractServlet;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 /**
  * Handles requests for the home page.
  */
+@Component(technology = "Java Servlet")
 @UsedByPerson(name = "Software Developer", description = "Views API information using")
 public class HomePageServlet extends AbstractServlet {
 
