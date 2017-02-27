@@ -1,15 +1,12 @@
 package com.structurizr.onpremisesapi.web.api;
 
 import com.structurizr.annotation.UsedBySoftwareSystem;
-import com.structurizr.annotation.UsesComponent;
 import com.structurizr.onpremisesapi.domain.UUID;
-import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
+import com.structurizr.onpremisesapi.web.AbstractServlet;
 import com.structurizr.onpremisesapi.workspace.WorkspaceComponentException;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.RenderedImage;
@@ -26,22 +23,7 @@ import java.util.stream.Collectors;
  *  - PUT /workspace/{id}
  */
 @UsedBySoftwareSystem(name = "Structurizr Client", description = "Gets and puts workspaces using")
-public class ApiServlet extends HttpServlet {
-
-    @UsesComponent(description = "Gets and puts workspace data using")
-    private WorkspaceComponent workspaceComponent;
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-
-        WorkspaceComponent workspaceComponent = WorkspaceComponent.create(config.getServletContext().getInitParameter("dataDirectory"));
-        setWorkspaceComponent(workspaceComponent);
-    }
-
-    void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
-        this.workspaceComponent = workspaceComponent;
-    }
+public class ApiServlet extends AbstractServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -63,7 +45,7 @@ public class ApiServlet extends HttpServlet {
                     return;
                 }
 
-                if (workspaceComponent.createWorkspace(workspaceId, key, secret)) {
+                if (getWorkspaceComponent().createWorkspace(workspaceId, key, secret)) {
                     send(new ApiSuccessMessage("The key and secret for workspace " + workspaceId + " have been updated."), response);
                 } else {
                     send(new ApiError("A key and secret pair for workspace " + workspaceId + " already exists."), response);
@@ -89,7 +71,7 @@ public class ApiServlet extends HttpServlet {
                 String resource = getResource(request);
                 if (resource == null) {
                     if (isAuthorised(workspaceId, "GET", getPath(request, workspaceId), null, true, request, response)) {
-                        String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId);
+                        String workspaceAsJson = getWorkspaceComponent().getWorkspace(workspaceId);
 
                         response.setCharacterEncoding("UTF-8");
                         response.setContentType("application/json; charset=utf-8");
@@ -98,7 +80,7 @@ public class ApiServlet extends HttpServlet {
                 } else {
                     if (isImage(resource)) {
                         try {
-                            RenderedImage image = workspaceComponent.getImage(workspaceId, resource);
+                            RenderedImage image = getWorkspaceComponent().getImage(workspaceId, resource);
                             if (image != null) {
                                 String fileExtension = resource.substring(resource.lastIndexOf(".")+1);
                                 response.setContentType(getMimeType(fileExtension));
@@ -160,7 +142,7 @@ public class ApiServlet extends HttpServlet {
                 String workspaceAsJson = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
                 if (isAuthorised(workspaceId, "PUT", getPath(request, workspaceId), workspaceAsJson, false, request, response)) {
-                    workspaceComponent.putWorkspace(workspaceId, workspaceAsJson);
+                    getWorkspaceComponent().putWorkspace(workspaceId, workspaceAsJson);
 
                     send(new ApiSuccessMessage(), response);
                 }
@@ -231,7 +213,7 @@ public class ApiServlet extends HttpServlet {
     private boolean isAuthorised(long workspaceId, String httpMethod, String path, String content, boolean bypassHMacValidation, HttpServletRequest request, HttpServletResponse response) throws Exception {
         String key = request.getParameter("key");
         String secret = request.getParameter("secret");
-        if (UUID.isUUID(key) && UUID.isUUID(secret) && key.equals(workspaceComponent.getApiKey(workspaceId)) && secret.equals(workspaceComponent.getApiSecret(workspaceId))) {
+        if (UUID.isUUID(key) && UUID.isUUID(secret) && key.equals(getWorkspaceComponent().getApiKey(workspaceId)) && secret.equals(getWorkspaceComponent().getApiSecret(workspaceId))) {
             return true;
         }
 
@@ -242,7 +224,7 @@ public class ApiServlet extends HttpServlet {
             return false;
         }
 
-        String apiKey = workspaceComponent.getApiKey(workspaceId);
+        String apiKey = getWorkspaceComponent().getApiKey(workspaceId);
 
         HmacAuthorizationHeader hmacAuthorizationHeader = HmacAuthorizationHeader.parse(authorizationHeaderAsString);
         String apiKeyFromAuthorizationHeader = hmacAuthorizationHeader.getApiKey();
@@ -277,7 +259,7 @@ public class ApiServlet extends HttpServlet {
 
         contentMd5InRequest = new String(Base64.getDecoder().decode(contentMd5Header));
 
-        String apiSecret = workspaceComponent.getApiSecret(workspaceId);
+        String apiSecret = getWorkspaceComponent().getApiSecret(workspaceId);
 
         try {
             String generatedContentMd5 = new Md5Digest().generate(content);

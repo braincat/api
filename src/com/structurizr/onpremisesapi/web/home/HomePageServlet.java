@@ -1,13 +1,10 @@
 package com.structurizr.onpremisesapi.web.home;
 
 import com.structurizr.annotation.UsedByPerson;
-import com.structurizr.annotation.UsesComponent;
-import com.structurizr.onpremisesapi.workspace.WorkspaceComponent;
+import com.structurizr.onpremisesapi.web.AbstractServlet;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,33 +13,17 @@ import java.io.IOException;
  * Handles requests for the home page.
  */
 @UsedByPerson(name = "Software Developer", description = "Views API information using")
-public class HomePageServlet extends HttpServlet {
-
-    private static final int GUID_LENGTH = 36;
-
-    @UsesComponent(description = "Gets and puts workspace data using")
-    private WorkspaceComponent workspaceComponent;
-
-    @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-
-        WorkspaceComponent workspaceComponent = WorkspaceComponent.create(config.getServletContext().getInitParameter("dataDirectory"));
-        setWorkspaceComponent(workspaceComponent);
-    }
-
-    void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
-        this.workspaceComponent = workspaceComponent;
-    }
+public class HomePageServlet extends AbstractServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("workspaces", workspaceComponent.getWorkspaces());
+        request.setAttribute("workspaces", getWorkspaceComponent().getWorkspaces());
         String apiUrl = request.getRequestURL().toString();
         if (apiUrl.endsWith("/")) {
             apiUrl = apiUrl.substring(0, apiUrl.length()-1);
         }
         request.setAttribute("apiUrl", apiUrl);
+        request.setAttribute("dataDirectory", getDataDirectory());
 
         RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/views/home.jsp");
         dispatcher.forward(request,response);

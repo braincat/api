@@ -47,7 +47,7 @@
             <c:choose>
             <c:when test="${not empty workspaces}">
             <p>
-                Workspace data is being stored at <code>${initParam['dataDirectory']}</code> and here is a summary of the workspaces that have been configured.
+                Workspace data is being stored at <code>${dataDirectory}</code> and here is a summary of the workspaces that have been configured.
             </p>
 
             <br />
@@ -73,7 +73,7 @@
             </c:when>
             <c:otherwise>
             <p>
-                Workspace data is being stored at <code>${initParam['dataDirectory']}</code> but there are no workspaces configured yet.
+                Workspace data is being stored at <code>${dataDirectory}</code> but there are no workspaces configured yet.
             </p>
             </c:otherwise>
             </c:choose>
