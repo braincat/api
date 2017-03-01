@@ -42,6 +42,8 @@ You can also POST the data to the local API server, using a command like the fol
 curl --data "key=0bca9de2-f0f2-4044-8837-6b02913d0d6f&secret=2e994f3a-acee-49be-bd62-9e821055c5b9" https://localhost:9999/workspace/28201 --insecure
 ```
 
+Please note that this HTTP POST (which is also used by the Sync button) will only work if the ```key.txt``` and ```secret.txt``` files do not exist for the specified workspace.
+
 Alternatively, you can do this manually by opening a command prompt and changing to the directory that the Structurizr API is using to store data. This directory needs to contain a sub-directory for the workspace, which itself needs to contain a ```key.txt``` and ```secret.txt``` file.
 The contents of these files must correspond to the values shown on your Structurizr dashboard. For example.
 
