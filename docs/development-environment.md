@@ -22,3 +22,9 @@ cd structurizr-api
 ```
 
 The ```build/libs``` directory will contain the assembled WAR file (e.g. ```structurizr-api-x.y.war```) when the build is successful.
+
+### Travis
+
+Travis CI is running as a build server for the Structurizr API at [https://travis-ci.org/structurizr/api](https://travis-ci.org/structurizr/api).
+
+[![](https://travis-ci.org/structurizr/api.svg?branch=master)](https://travis-ci.org/structurizr/api)

@@ -6,4 +6,4 @@ This GitHub repository is a simple implementation of the Structurizr API, which 
 
 [![Build Status](https://travis-ci.org/structurizr/api.svg?branch=master)](https://travis-ci.org/structurizr/api)
 
-The software architecture diagrams and documentation can be found at [https://structurizr.com/public/18571/documentation](https://structurizr.com/public/18571/documentation).
+The software architecture diagrams and documentation can be found at [https://structurizr.com/share/18571/documentation](https://structurizr.com/public/18571/documentation).
