@@ -3,9 +3,8 @@ package com.structurizr.onpremisesapi;
 import com.structurizr.Workspace;
 import com.structurizr.api.StructurizrClient;
 import com.structurizr.componentfinder.*;
-import com.structurizr.documentation.Documentation;
 import com.structurizr.documentation.Format;
-import com.structurizr.documentation.Type;
+import com.structurizr.documentation.StructurizrDocumentation;
 import com.structurizr.model.*;
 import com.structurizr.view.*;
 
@@ -27,7 +26,8 @@ public class Structurizr {
         model.setEnterprise(new Enterprise("Your organization"));
         ViewSet views = workspace.getViews();
         Styles styles = workspace.getViews().getConfiguration().getStyles();
-        Documentation documentation = workspace.getDocumentation();
+        StructurizrDocumentation documentation = new StructurizrDocumentation(model);
+        workspace.setDocumentation(documentation);
 
         // software systems and people
         Person softwareDeveloper = model.addPerson(Location.Internal, "Software Developer", "A software developer.");
@@ -101,13 +101,13 @@ public class Structurizr {
         // documentation
         File documentationRoot = new File(".");
         documentation.addImages(documentationRoot);
-        documentation.add(structurizrApi, Type.Context, Format.Markdown, new File(documentationRoot, "context.md"));
-        documentation.add(structurizrApi, Type.Data, Format.Markdown, new File(documentationRoot, "data.md"));
-        documentation.add(structurizrApi, Type.Containers, Format.Markdown, new File(documentationRoot, "containers.md"));
-        documentation.add(apiApplication, Format.Markdown, new File(documentationRoot, "components.md"));
-        documentation.add(structurizrApi, Type.DevelopmentEnvironment, Format.Markdown, new File(documentationRoot, "development-environment.md"));
-        documentation.add(structurizrApi, Type.Deployment, Format.Markdown, new File(documentationRoot, "deployment.md"));
-        documentation.add(structurizrApi, Type.Usage, Format.Markdown, new File(documentationRoot, "usage.md"));
+        documentation.addContextSection(structurizrApi, Format.Markdown, new File(documentationRoot, "context.md"));
+        documentation.addContainersSection(structurizrApi, Format.Markdown, new File(documentationRoot, "containers.md"));
+        documentation.addComponentsSection(apiApplication, Format.Markdown, new File(documentationRoot, "components.md"));
+        documentation.addDataSection(structurizrApi, Format.Markdown, new File(documentationRoot, "data.md"));
+        documentation.addDeploymentSection(structurizrApi, Format.Markdown, new File(documentationRoot, "deployment.md"));
+        documentation.addCustomSection(structurizrApi, "Usage", 4, Format.Markdown, new File(documentationRoot, "usage.md"));
+        documentation.addDevelopmentEnvironmentSection(structurizrApi, Format.Markdown, new File(documentationRoot, "development-environment.md"));
 
         // upload to Structurizr
         String apiKey = System.getenv("STRUCTURIZR_API_KEY");
