@@ -7,12 +7,12 @@
 
     <servlet>
         <servlet-name>HomePageServlet</servlet-name>
-        <servlet-class>com.structurizr.onpremisesapi.web.home.HomePageServlet</servlet-class>
+        <servlet-class>com.structurizr.onpremises.web.home.HomePageServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>ApiServlet</servlet-name>
-        <servlet-class>com.structurizr.onpremisesapi.web.api.ApiServlet</servlet-class>
+        <servlet-class>com.structurizr.onpremises.web.api.ApiServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -25,11 +25,6 @@
         <url-pattern>/workspace/*</url-pattern>
     </servlet-mapping>
 
-    <context-param>
-        <param-name>dataDirectory</param-name>
-        <param-value>/usr/local/structurizr</param-value>
-    </context-param>
-
     <error-page>
         <error-code>404</error-code>
         <location>/WEB-INF/views/404.jsp</location>
@@ -39,14 +34,14 @@
         <welcome-file>home</welcome-file>
     </welcome-file-list>
 
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>structurizrApi</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
+    <!--<security-constraint>-->
+        <!--<web-resource-collection>-->
+            <!--<web-resource-name>structurizrApi</web-resource-name>-->
+            <!--<url-pattern>/*</url-pattern>-->
+        <!--</web-resource-collection>-->
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    <!--</security-constraint>-->
 
 </web-app>

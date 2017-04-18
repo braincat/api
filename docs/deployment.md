@@ -5,13 +5,12 @@ It has been tested on Java 8 and Apache Tomcat 7/8.
 
 ### Configuration
 
-The on-premises API is configured to use ```/usr/local/structurizr``` for data storage, and this can be changed by modifying the value of the
- ```dataDirectory``` parameter in the ```web.xml``` file.
- 
-To make future upgrades simpler, the data storage location can also be configured outside of the web application, by adding a
-JNDI environment entry for the web application context called ```structurizr/api/dataDirectory```.
-With Apache Tomcat, you can do this by [defining a context](http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Defining_a_context)
+By default, the on-premises API is configured to use ```/usr/local/structurizr``` for data storage, and this can be changed by setting one of the following:
+
+- A JNDI environment entry for the web application context called ```structurizr/dataDirectory```. With Apache Tomcat, you can do this by [defining a context](http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Defining_a_context)
 and [adding an environment entry](http://tomcat.apache.org/tomcat-7.0-doc/config/context.html#Environment_Entries).
+- A system property of ```structurizr.dataDirectory```. You can specify this on the command line when starting up the JVM (e.g. ```-Dstructurizr.dataDirectory=/some/path```). For Apache Tomcat you can set this using the ```JAVA_OPTS``` environment variable.
+- An environment variable called ```STRUCTURIZR_DATA_DIRECTORY```.
 
 ### Java EE server
 

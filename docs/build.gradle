@@ -23,7 +23,7 @@ sourceSets {
 sourceCompatibility = 1.8
 
 task run(type:JavaExec) {
-    main = "com.structurizr.onpremisesapi.Structurizr"
+    main = "com.structurizr.onpremises.api.Structurizr"
     def apiKey = System.getenv("STRUCTURIZR_API_KEY")
     if (apiKey != null) {
         environment "STRUCTURIZR_API_KEY", apiKey

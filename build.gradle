@@ -7,7 +7,7 @@ apply plugin: 'war'
 
 description = 'structurizr-api'
 group = 'com.structurizr'
-version = '0.3'
+version = '0.4'
 
 repositories {
     mavenCentral()
@@ -18,6 +18,7 @@ dependencies {
     compile 'javax.servlet:servlet-api:2.5'
     compile 'javax.servlet:jstl:1.2'
     compile 'com.structurizr:structurizr-annotations:1.0.0-RC3'
+    compile 'com.structurizr:structurizr-core:1.0.0-RC3'
     testCompile 'junit:junit:4.12'
 }
 
